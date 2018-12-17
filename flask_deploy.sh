@@ -1,7 +1,7 @@
 # Install virtualenv
 http://flask.pocoo.org/docs/1.0/installation/#install-virtualenv
 
-#mkdir -p mission_checker/src/templates
+#mkdir -p mission_checker/src/uploads
 #cd mission_checker
 
 # Create virtual environment
