@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+
+<head>
+    <style>
+        html {
+            background-color: #cacaca;
+        }
+
+        form {
+            padding-top: 20%;
+            margin: auto;
+            width: 500px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- add csrf token! -->
+    <form method="post" enctype="multipart/form-data">
+
+        <input type="file" name="mission_file" accept=".pbo" required >
+
+        <input type="submit" value="Send file to mission check">
+
+    </form>
+
+</body>
+</html>
