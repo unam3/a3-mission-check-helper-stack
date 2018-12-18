@@ -6,6 +6,8 @@ from __future__ import unicode_literals
 import re, sys, os
 from subprocess import check_output, CalledProcessError
 
+#print sys.path
+
 from flask import Flask, request, render_template#, url_for
 
 from check.check_filename import is_filename_ok
@@ -46,13 +48,18 @@ def index():
         # run mission_check.py path_to_save_uploaded_file
         devnull = open(os.devnull, 'w')
 
+        #print os.getcwd()
+
+        json = ''
+
         try:
             json = check_output(
                 [
-                    '/home/yay/a3/check.sh',
+                    #'./src/tost.sh',
+                    './src/check/check.sh',
                     path_to_save_uploaded_file
                 ],
-                stderr=devnull
+                #stderr=devnull
             )
 
         except CalledProcessError as shi:
@@ -65,7 +72,7 @@ def index():
 
 
         # put json to the template
-        return render_template('report.html', json=json)
+        return render_template('report.html', json=json.decode('utf-8'))
 
     else:
 
