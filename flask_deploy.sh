@@ -22,3 +22,6 @@ FLASK_APP=~/mission_checker/src/app.py flask run
 cd ~/mission_checker
 . venv/bin/activate
 FLASK_APP=~/mission_checker/src/app.py FLASK_ENV=development flask run
+
+#
+cd ~/a3/; rm -rf ~/mission_checker/src/check/; git archive --format=tar HEAD | (mkdir ~/mission_checker/src/check && cd ~/mission_checker/src/check && tar xf -)

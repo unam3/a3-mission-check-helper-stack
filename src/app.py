@@ -4,11 +4,11 @@
 from __future__ import unicode_literals
 
 import re, sys, os
-
-#from subprocess import call, check_output, CalledProcessError
-
+from subprocess import check_output, CalledProcessError
 
 from flask import Flask, request, render_template#, url_for
+
+from check.check_filename import is_filename_ok
 
 app = Flask(__name__)
 
@@ -27,10 +27,12 @@ def index():
 
         path_to_uploads = current_script_dir + '/uploads/'
 
-        # implement next line in python:
-        # sed -n -E '/^wog_[0-9]{2,3}_[a-z0-9_]+_[0-9]{2}\.[A-Za-z0-9_]+\.pbo$/p' <<< $filename
-
         file_storage_instance = request.files.get('mission_file')
+
+        if not is_filename_ok(file_storage_instance.filename):
+
+            # TODO: pass this to the client side
+            print 'Filename is wrong!'
 
         path_to_save_uploaded_file = path_to_uploads + file_storage_instance.filename
 
@@ -42,9 +44,28 @@ def index():
         file_to_write.close()
 
         # run mission_check.py path_to_save_uploaded_file
+        devnull = open(os.devnull, 'w')
+
+        try:
+            json = check_output(
+                [
+                    '/home/yay/a3/check.sh',
+                    path_to_save_uploaded_file
+                ],
+                stderr=devnull
+            )
+
+        except CalledProcessError as shi:
+
+            if (shi.returncode != 1):
+
+                print 'return code: %s for %s' % (shi.returncode, path_to_save_uploaded_file)
+
+        devnull.close()
+
 
         # put json to the template
-        return render_template('report.html', json='213')
+        return render_template('report.html', json=json)
 
     else:
 
