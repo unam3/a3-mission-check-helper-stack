@@ -19,7 +19,7 @@ app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 def index():
 
-    print request, request.mimetype, len(request.files)#, request.headers
+    #print request, request.mimetype, len(request.files)#, request.headers
 
     # TODO: add file length check
     if request.method == 'POST' and len(request.files) == 1 and request.files.has_key('mission_file'):
@@ -55,9 +55,9 @@ def index():
         try:
             json = check_output(
                 [
-                    #'./src/tost.sh',
                     './src/check/check.sh',
-                    path_to_save_uploaded_file
+                    path_to_save_uploaded_file,
+                    './src/check/'
                 ],
                 #stderr=devnull
             )
@@ -70,9 +70,12 @@ def index():
 
         devnull.close()
 
+        #print json
+
 
         # put json to the template
-        return render_template('report.html', json=json.decode('utf-8'))
+        # :-1 because of trailing newline
+        return render_template('report.html', json=json[:-1].decode('utf-8'))
 
     else:
 

@@ -17,6 +17,14 @@
         }
     </style>
 
+    <script>
+        const report_json = {{ json | safe }};
+
+        const report = JSON.parse(report_json);
+
+        console.log(report);
+    </script>
+
     <!--
     <script charset="utf-8" type="text/javascript" src="//interpret.js"></script>
     -->
@@ -26,7 +34,6 @@
     <main>
         Soo…
 
-        {{ json }}
     </main>
 
 </body>
