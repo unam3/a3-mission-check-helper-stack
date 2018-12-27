@@ -5,36 +5,535 @@
     <title>Mission checker report</title>
 
     <style>
+        /* based on https://thebestmotherfucking.website/css/main.css */
+
         html {
-            background-color: #cacaca;
+          background-color: #fefefe
         }
 
-        main {
-            padding-top: 20%;
-            margin: auto;
-            width: 500px;
-            text-align: center;
+        body {
+          /* font-family: Open Sans,Arial; */
+          font-family: sans;
+          color: #454545;
+          /* font-size: 16px; */
+          font-size: 20px;
+          margin: 2em auto;
+          max-width: 800px;
+          padding: 1em;
+          /* line-height: 1.4; */
+          line-height: 1.8;
+          text-align: justify
+        }
+
+        html.contrast body {
+          color: #050505
+        }
+
+        html.contrast blockquote {
+          color: #11151a
+        }
+
+        html.contrast blockquote:before {
+          color: #262626
+        }
+
+        html.contrast a {
+          color: #0051c9
+        }
+
+        html.contrast a:visited {
+          color: #7d013e
+        }
+
+        html.contrast span.wr {
+          color: #800
+        }
+
+        html.contrast span.mfw {
+          color: #4d0000
+        }
+
+        html.inverted {
+          background-color: #010101
+        }
+
+        html.inverted body {
+          color: #bababa
+        }
+
+        html.inverted div#invmode {
+          color: #fff;
+          background-color: #000
+        }
+
+        html.inverted blockquote {
+          color: #dad0c7
+        }
+
+        html.inverted blockquote:before {
+          color: #bfbfbf
+        }
+
+        html.inverted a {
+          color: #07a
+        }
+
+        html.inverted a:visited {
+          color: #ac5a82
+        }
+
+        html.inverted span.wr {
+          color: #c0392b
+        }
+
+        html.inverted span.mfw {
+          color: #8a0000
+        }
+
+        a {
+          color: #07a
+        }
+
+        a:visited {
+          color: #941352
+        }
+
+        .noselect {
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none
+        }
+
+        span.citneed {
+          vertical-align: top;
+          font-size: .7em;
+          padding-left: .3em
+        }
+
+        small {
+          font-size: .4em
+        }
+
+        p.st {
+          margin-top: -1em
+        }
+
+        div.fancyPositioning div.picture-left {
+          float: left;
+          width: 40%;
+          overflow: hidden;
+          margin-right: 1em
+        }
+
+        div.fancyPositioning div.picture-left img {
+          width: 100%
+        }
+
+        div.fancyPositioning div.picture-left p.caption {
+          font-size: .7em
+        }
+
+        div.fancyPositioning div.tleft {
+          float: left;
+          width: 55%
+        }
+
+        div.fancyPositioning div.tleft p:first-child {
+          margin-top: 0
+        }
+
+        div.fancyPositioning:after {
+          display: block;
+          content: "";
+          clear: both
+        }
+
+        ul li img {
+          height: 1em
+        }
+
+        blockquote {
+          color: #456;
+          margin-left: 0;
+          margin-top: 2em;
+          margin-bottom: 2em
+        }
+
+        blockquote span {
+          float: left;
+          margin-left: 1rem;
+          padding-top: 1rem
+        }
+
+        blockquote author {
+          display: block;
+          clear: both;
+          font-size: .6em;
+          margin-left: 2.4rem;
+          font-style: oblique
+        }
+
+        blockquote author:before {
+          content: "- ";
+          margin-right: 1em
+        }
+
+        blockquote:before {
+          font-family: Times New Roman,Times,Arial;
+          color: #666;
+          content: open-quote;
+          font-size: 2.2em;
+          font-weight: 600;
+          float: left;
+          margin-top: 0;
+          margin-right: .2rem;
+          width: 1.2rem
+        }
+
+        blockquote:after {
+          content: "";
+          display: block;
+          clear: both
+        }
+
+        @media screen and (max-width: 500px) {
+          body {
+            text-align:left
+          }
+
+          div.fancyPositioning div.picture-left,div.fancyPositioning div.tleft {
+            float: none;
+            width: inherit
+          }
+
+          blockquote span {
+            width: 80%
+          }
+
+          blockquote author {
+            padding-top: 1em;
+            width: 80%;
+            margin-left: 15%
+          }
+
+          blockquote author:before {
+            content: "";
+            margin-right: inherit
+          }
+        }
+
+        span.visited {
+          color: #941352
+        }
+
+        span.visited-maroon {
+          color: #85144b
+        }
+
+        span.wr {
+          color: #c0392b;
+          font-weight: 600;
+          text-decoration: underline
+        }
+
+        div#contrast {
+          color: #000;
+          top: 10px
+        }
+
+        div#contrast,div#invmode {
+          cursor: pointer;
+          position: absolute;
+          right: 10px;
+          font-size: .8em;
+          text-decoration: underline;
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none
+        }
+
+        div#invmode {
+          color: #fff;
+          background-color: #000;
+          top: 34px;
+          padding: 2px 5px
+        }
+
+        span.sb {
+          color: #00e
+        }
+
+        span.sb,span.sv {
+          cursor: not-allowed
+        }
+
+        span.sv {
+          color: #551a8b
+        }
+
+        span.foufoufou {
+          color: #444;
+          font-weight: 700
+        }
+
+        span.foufoufou:before {
+          content: "";
+          display: inline-block;
+          width: 1em;
+          height: 1em;
+          margin-left: .2em;
+          margin-right: .2em;
+          background-color: #444
+        }
+
+        span.foufivfoufivfoufiv {
+          color: #454545;
+          font-weight: 700
+        }
+
+        span.foufivfoufivfoufiv:before {
+          content: "";
+          display: inline-block;
+          width: 1em;
+          height: 1em;
+          margin-left: .2em;
+          margin-right: .2em;
+          background-color: #454545
+        }
+
+        span.mfw {
+          color: #730000
+        }
+
+        a.kopimi,a.kopimi img.kopimi {
+          display: block;
+          margin-left: auto;
+          margin-right: auto
+        }
+
+        a.kopimi img.kopimi {
+          height: 2em
+        }
+
+        p.fakepre {
+          font-family: monospace;
+          font-size: .9em
         }
     </style>
 
     <script>
-        const report_json = {{ json | safe }};
+        'use strict';
 
-        const report = JSON.parse(report_json);
+        // "import" msg object
+        {% include 'msg' %}
 
-        console.log(report);
+        window.addEventListener("load", () => {
+
+            const report_json = {{ json | safe }};
+
+            const report = JSON.parse(report_json);
+
+            console.log(report);
+
+            const main = document.getElementsByTagName('main')[0];
+
+            const dummy = document.createElement('div');
+
+            report.errors.forEach(
+                error => {
+                    main.appendChild(dummy).textContent = error;
+                }
+            );
+
+
+            const mission_attrs_in_order = [
+                'briefing_name',
+                'overview_text',
+                'author',
+                'loadScreen',
+            ];
+
+            const addDiv = (text) => main.appendChild(dummy.cloneNode())
+                        .innerHTML = text;
+
+            //Object.keys(report.mission_attrs).forEach(
+            //    attr_name => {
+            //        console.log(attr_name, report.mission_attrs[attr_name]);
+
+            //        main.appendChild(dummy.cloneNode())
+            //            .textContent = `${msg.mission_attrs[attr_name]}: ${report.mission_attrs[attr_name]}`;
+            //    }
+            //);
+            mission_attrs_in_order.forEach(
+                attr_name => {
+                    console.log(attr_name, report.mission_attrs[attr_name]);
+
+                    if (report.mission_attrs[attr_name]) {
+                        addDiv(`${msg.mission_attrs[attr_name]}: ${report.mission_attrs[attr_name]}`);
+                    }
+                }
+            );
+
+            //const mission_attrs_binary = [
+            //    'wog3_no_auto_long_range_radio',
+            //    'wmt_auto_med_provision',
+            //    'wmt_side_channel_by_lr',
+            //    'wmt_disable_fuel_stations',
+            //];
+
+            addDiv( `${msg.mission_attrs['wog3_no_auto_long_range_radio']}: ${report.mission_attrs['wog3_no_auto_long_range_radio'] ? '-' : '+'}`);
+            addDiv( `${msg.mission_attrs['wmt_auto_med_provision']}: ${report.mission_attrs['wmt_auto_med_provision'] ? '+' : '-'}`);
+            addDiv( `${msg.mission_attrs['wmt_side_channel_by_lr']}: ${report.mission_attrs['wmt_side_channel_by_lr'] ? '+' : '-'}`);
+            addDiv( `${msg.mission_attrs['wmt_disable_fuel_stations']}: ${report.mission_attrs['wmt_disable_fuel_stations'] ? '-' : '+'}`);
+
+            //check_results['slots']['total_count'] = total_playable_slots
+            //print '\nPlayable slots in total:', total_playable_slots
+
+            //check_results['slots']['total_count'] = total_playable_slots
+            //print '\nThe number of slots on missions should not exceed 190.'
+
+            // total slot counts/ per side
+//            Object.keys(report.sides).reduce(
+//
+//                (units_per_side, side) => {
+//
+//                    units_per_side[side] = report.sides[side].reduce(
+//
+//                        (side_units_count, {units}) =>
+//
+//                            side_units_count + units.reduce(
+//                                (playable_units_count, unit) => unit.is_playable ?
+//                                    (playable_units_count + 1) : playable_units_count
+//                                0
+//                            )
+//                        ,
+//                        0
+//                    );
+//
+//                    return units_per_side;
+//                },
+//                {}
+//
+//            );
+
+
+            const isMedic = (attr_value) => {
+
+                if (attr_value === '0.0') {
+
+                    return '"None" regular unit medical abillities';
+
+                } else if (attr_value === '1.0') {
+
+                    return '"Regular medic"';
+
+                } else if (attr_value === '2.0') {
+
+                    return '"Doctor"';
+
+                } else if (typeof attr_value !== 'undefined') {
+
+                    return 'Unusual "ace_isMedic" attribute value: ' + attr_value;
+
+                }
+
+                return false;
+
+            };
+
+            const isEngineer = (attr_value) => {
+            
+                if (attr_value == '0.0') {
+                    
+                    return 'Unit Engineer abillities is off';
+            
+                } else if (attr_value == '1.0') {
+                    
+                    return '"Engineer"';
+            
+                } else if (attr_value == '2.0') {
+                    
+                    return '"Advanced Engineer"';
+            
+                } else if (typeof attr_value !== 'undefined') {
+                    
+                    return 'Unusual "ace_isEngineer" attribute value: ' + attr_value;
+
+                }
+            
+                return false;
+
+            }
+
+
+            const sides_n_shiet = Object.keys(report.sides).reduce(
+
+                (str, side) => {
+
+                    //addDiv(`${side} has ${report.slots.playable_slots[side]} playable slots\n`);
+
+                    return str +
+                        
+                        `\n${side} has ${report.slots.playable_slots[side]} playable slots\n` +
+
+                        report.sides[side].reduce(
+
+                            (squad_str, {units, groupID}, i) => {
+
+                                squad_str += `\n${groupID || (msg.slots.squad_default_name + i)}\n`;
+
+                                squad_str += units.reduce(
+
+                                    //(units_str, {isPlayable, init, type, description}) => unit.is_playable ?
+                                    //    (playable_units_count + 1) : playable_units_count,
+
+                                    (units_str, {isPlayable, init, type, description, ace_isEngineer, ace_isMedic}) =>
+                                        units_str +
+                                            [
+                                                description,
+                                                (!isPlayable && 'this unit is not playable!') || '',
+                                                type,
+                                                isEngineer(ace_isEngineer) || '',
+                                                isMedic(ace_isMedic) || '',
+                                                init
+                                            ].join(' ') +
+                                            '\n',
+                                    ''
+                                );
+
+                                return squad_str;
+                            },
+                            ''
+                        ) + '\n';
+                },
+                ''
+            );
+
+            addDiv(sides_n_shiet);
+
+            //if (report.slots.unique_inits.length) {
+            //    report.slots.unique_inits.forEach(
+            //        ({splitted_init, init, has_no_radio, vanilla_equipment}) => {
+            //            
+            //            //addDiv(`${init} ${splitted_init} ${has_no_radio} ${vanilla_equipment}`)
+
+            //            const no_radio = has_no_radio ? ` ${msg.warnings.has_no_radio}` : '';
+
+            //            const has_vanilla_equipment = vanilla_equipment.length ?
+            //                ` ${msg.warnings.vanilla_equipment}` : '';
+
+            //            addDiv(init + no_radio + has_vanilla_equipment);
+            //        }
+            //    );
+            //}
+        });
     </script>
-
-    <!--
-    <script charset="utf-8" type="text/javascript" src="//interpret.js"></script>
-    -->
 </head>
 <body>
-
-    <main>
-        Soo…
-
-    </main>
-
+    <main></main>
 </body>
 </html>
