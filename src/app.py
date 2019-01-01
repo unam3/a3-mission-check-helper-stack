@@ -21,6 +21,8 @@ def index():
 
     #print request, request.mimetype, len(request.files)#, request.headers
 
+    wrong_filename = False
+
     # TODO: add file length check
     if request.method == 'POST' and len(request.files) == 1 and request.files.has_key('mission_file'):
 
@@ -33,8 +35,7 @@ def index():
 
         if not is_filename_ok(file_storage_instance.filename):
 
-            # TODO: pass this to the client side
-            print 'Filename is wrong!'
+            wrong_filename = True
 
         path_to_save_uploaded_file = path_to_uploads + file_storage_instance.filename
 
@@ -75,7 +76,19 @@ def index():
 
         # put json to the template
         # :-1 because of trailing newline
-        return render_template('report.html', json=json[:-1].decode('utf-8'))
+        #return render_template('report.html', json=json[:-1].decode('utf-8'))
+
+        return render_template(
+            'report.html',
+            json=(
+                str('').join([
+                    json[:-3],
+                    str(', \\"wrong_filename\\": true}"')
+                ])
+                if wrong_filename
+                else json[:-1]
+            ).decode('utf-8')
+        )
 
     else:
 
