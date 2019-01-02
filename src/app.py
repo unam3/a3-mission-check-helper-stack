@@ -11,6 +11,8 @@ from subprocess import check_output, CalledProcessError
 from flask import Flask, request, render_template#, url_for
 
 from check.check_filename import is_filename_ok
+from check.extractpbo import extract_pbo, ExtractpboError
+from check.check_binarization import was_mission_binarized
 
 app = Flask(__name__)
 
@@ -46,10 +48,29 @@ def index():
 
         file_to_write.close()
 
+        #print os.getcwd()
+
+        extractpbo_error = False
+
+        try:
+
+            extract_pbo(path_to_save_uploaded_file)
+
+        except ExtractpboError as error:
+
+            extractpbo_error = True
+            
+            return render_template(
+                'report.html',
+                json=('\'{"errors": ["%s"]}\'' % (error.value.decode('utf-8')))
+            )
+
+
+        # "mission.sqm wasn't binarized."
+        mission_was_binarized = was_mission_binarized(path_to_save_uploaded_file)
+
         # run mission_check.py path_to_save_uploaded_file
         devnull = open(os.devnull, 'w')
-
-        #print os.getcwd()
 
         json = ''
 

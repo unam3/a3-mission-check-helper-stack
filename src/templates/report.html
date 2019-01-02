@@ -360,23 +360,19 @@
             const addDiv = (text) => main.appendChild(dummy.cloneNode())
                         .innerHTML = text;
 
-            //Object.keys(report.mission_attrs).forEach(
-            //    attr_name => {
-            //        console.log(attr_name, report.mission_attrs[attr_name]);
+            if (report.mission_attrs) {
 
-            //        main.appendChild(dummy.cloneNode())
-            //            .textContent = `${msg.mission_attrs[attr_name]}: ${report.mission_attrs[attr_name]}`;
-            //    }
-            //);
-            mission_attrs_in_order.forEach(
-                attr_name => {
-                    console.log(attr_name, report.mission_attrs[attr_name]);
+                mission_attrs_in_order.forEach(
+                    attr_name => {
+                        const attribute_value = report.mission_attrs && report.mission_attrs[attr_name]
 
-                    if (report.mission_attrs[attr_name]) {
-                        addDiv(`${msg.mission_attrs[attr_name]}: ${report.mission_attrs[attr_name]}`);
+                        console.log(attr_name, attribute_value);
+
+                        if (attribute_value) {
+                            addDiv(`${msg.mission_attrs[attr_name]}: ${attribute_value}`);
+                        }
                     }
-                }
-            );
+                );
 
             //const mission_attrs_binary = [
             //    'wog3_no_auto_long_range_radio',
@@ -385,10 +381,30 @@
             //    'wmt_disable_fuel_stations',
             //];
 
-            addDiv( `${msg.mission_attrs['wog3_no_auto_long_range_radio']}: ${report.mission_attrs['wog3_no_auto_long_range_radio'] ? '-' : '+'}`);
-            addDiv( `${msg.mission_attrs['wmt_auto_med_provision']}: ${report.mission_attrs['wmt_auto_med_provision'] ? '+' : '-'}`);
-            addDiv( `${msg.mission_attrs['wmt_side_channel_by_lr']}: ${report.mission_attrs['wmt_side_channel_by_lr'] ? '+' : '-'}`);
-            addDiv( `${msg.mission_attrs['wmt_disable_fuel_stations']}: ${report.mission_attrs['wmt_disable_fuel_stations'] ? '-' : '+'}`);
+                if (report.mission_attrs['wog3_no_auto_long_range_radio']) {
+
+                    addDiv(`${msg.mission_attrs['wog3_no_auto_long_range_radio']}: ${report.mission_attrs['wog3_no_auto_long_range_radio'] ? '-' : '+'}`);
+
+                }
+
+                if (report.mission_attrs['wmt_auto_med_provision']) {
+
+                    addDiv(`${msg.mission_attrs['wmt_auto_med_provision']}: ${report.mission_attrs['wmt_auto_med_provision'] ? '+' : '-'}`);
+
+                }
+
+                if (report.mission_attrs['wmt_side_channel_by_lr']) {
+
+                    addDiv(`${msg.mission_attrs['wmt_side_channel_by_lr']}: ${report.mission_attrs['wmt_side_channel_by_lr'] ? '+' : '-'}`);
+
+                }
+
+                if (report.mission_attrs['wmt_disable_fuel_stations']) {
+
+                    addDiv(`${msg.mission_attrs['wmt_disable_fuel_stations']}: ${report.mission_attrs['wmt_disable_fuel_stations'] ? '-' : '+'}`);
+
+                }
+            }
 
             //check_results['slots']['total_count'] = total_playable_slots
             //print '\nPlayable slots in total:', total_playable_slots
@@ -470,52 +486,56 @@
             }
 
 
-            const sides_n_shiet = Object.keys(report.sides).reduce(
+            if (report.sides) {
 
-                (str, side) => {
+                const sides_n_shiet = Object.keys(report.sides).reduce(
 
-                    //addDiv(`${side} has ${report.slots.playable_slots[side]} playable slots\n`);
+                    (str, side) => {
 
-                    return str +
-                        
-                        `\n${side} has ${report.slots.playable_slots[side]} playable slots\n` +
+                        //addDiv(`${side} has ${report.slots.playable_slots[side]} playable slots\n`);
 
-                        report.sides[side].reduce(
+                        return str +
+                            
+                            `\n${side} has ${report.slots.playable_slots[side]} playable slots\n` +
 
-                            (squad_str, {units, groupID}, i) => {
+                            report.sides[side].reduce(
 
-                                squad_str += `\n${groupID || (msg.slots.squad_default_name + i)}\n`;
+                                (squad_str, {units, groupID}, i) => {
 
-                                squad_str += units.reduce(
+                                    squad_str += `\n${groupID || (msg.slots.squad_default_name + i)}\n`;
 
-                                    //(units_str, {isPlayable, init, type, description}) => unit.is_playable ?
-                                    //    (playable_units_count + 1) : playable_units_count,
+                                    squad_str += units.reduce(
 
-                                    (units_str, {isPlayable, init, type, description, ace_isEngineer, ace_isMedic}) =>
-                                        units_str +
-                                            [
-                                                description,
-                                                (!isPlayable && 'this unit is not playable!') || '',
-                                                type,
-                                                isEngineer(ace_isEngineer) || '',
-                                                isMedic(ace_isMedic) || '',
-                                                init
-                                            ].join(' ') +
-                                            '\n',
-                                    ''
-                                );
+                                        //(units_str, {isPlayable, init, type, description}) => unit.is_playable ?
+                                        //    (playable_units_count + 1) : playable_units_count,
 
-                                return squad_str;
-                            },
-                            ''
-                        ) + '\n';
-                },
-                ''
-            );
+                                        (units_str, {isPlayable, init, type, description, ace_isEngineer, ace_isMedic}) =>
+                                            units_str +
+                                                [
+                                                    description,
+                                                    (!isPlayable && 'this unit is not playable!') || '',
+                                                    type,
+                                                    isEngineer(ace_isEngineer) || '',
+                                                    isMedic(ace_isMedic) || '',
+                                                    init
+                                                ].join(' ') +
+                                                '\n',
+                                        ''
+                                    );
 
-            addDiv(sides_n_shiet);
+                                    return squad_str;
+                                },
+                                ''
+                            ) + '\n';
+                    },
+                    ''
+                );
 
-            //if (report.slots.unique_inits.length) {
+                addDiv(sides_n_shiet);
+
+            }
+
+            //if (report.slots && report.slots.unique_inits.length) {
             //    report.slots.unique_inits.forEach(
             //        ({splitted_init, init, has_no_radio, vanilla_equipment}) => {
             //            
