@@ -3,7 +3,8 @@
 
 from __future__ import unicode_literals
 
-import re, sys, os
+import re, sys, os, json
+
 from subprocess import check_output, CalledProcessError
 
 #print sys.path
@@ -13,6 +14,7 @@ from flask import Flask, request, render_template#, url_for
 from check.check_filename import is_filename_ok
 from check.extractpbo import extract_pbo, ExtractpboError
 from check.check_binarization import was_mission_binarized
+from check.mission_check import check as check_mission
 
 app = Flask(__name__)
 
@@ -69,46 +71,26 @@ def index():
         # "mission.sqm wasn't binarized."
         mission_was_binarized = was_mission_binarized(path_to_save_uploaded_file)
 
-        # run mission_check.py path_to_save_uploaded_file
-        devnull = open(os.devnull, 'w')
 
-        json = ''
+        path_to_extracted_mission = path_to_save_uploaded_file[:-4]
 
-        try:
-            json = check_output(
-                [
-                    './src/check/check.sh',
-                    path_to_save_uploaded_file,
-                    './src/check/'
-                ],
-                #stderr=devnull
-            )
+        check_results = check_mission(path_to_extracted_mission)
 
-        except CalledProcessError as shi:
-
-            if (shi.returncode != 1):
-
-                print 'return code: %s for %s' % (shi.returncode, path_to_save_uploaded_file)
-
-        devnull.close()
-
-        #print json
-
-
-        # put json to the template
-        # :-1 because of trailing newline
-        #return render_template('report.html', json=json[:-1].decode('utf-8'))
+        
+        check_results_json = json.dumps(json.dumps(check_results, ensure_ascii=False), ensure_ascii=False)
 
         return render_template(
             'report.html',
             json=(
-                str('').join([
-                    json[:-3],
-                    str(', \\"wrong_filename\\": true}"')
-                ])
-                if wrong_filename
-                else json[:-1]
-            ).decode('utf-8')
+                #str('').join([
+                #    check_results_json[:-3],
+                #    str(', \\"wrong_filename\\": true}"')
+                #])
+                #if wrong_filename
+                #else check_results_json[:-1]
+
+                check_results_json
+            )
         )
 
     else:
