@@ -343,24 +343,54 @@
 
             const dummy = document.createElement('div');
 
-            report.errors.forEach(
-                error => {
-                    main.appendChild(dummy).textContent = error;
-                }
-            );
-
-
-            const mission_attrs_in_order = [
-                'briefing_name',
-                'overview_text',
-                'author',
-                'loadScreen',
-            ];
 
             const addDiv = (text) => main.appendChild(dummy.cloneNode())
                         .innerHTML = text;
 
+
+            //console.log(msg.errors, Object.keys(report.errors))
+
+            Object.keys(report.errors).forEach(
+                error => {
+
+                    console.log(error, msg.errors[error])
+
+                    if (msg.errors[error]) {
+
+                        if (error === 'vanilla_equipment') {
+
+                            addDiv(msg.errors[error] + report.errors[error].join(', '));
+
+                        } else {
+
+                            if (report.errors[error] !== true) {
+
+                                addDiv(msg.errors[error] + ' ' + report.errors[error]);
+
+                            } else {
+                            
+                                addDiv(msg.errors[error]);
+
+                            }
+
+                        }
+
+                    } else {
+                        
+                        throw 'unlocalized error';
+                    }
+                }
+            );
+
+
             if (report.mission_attrs) {
+
+                const mission_attrs_in_order = [
+                    'briefing_name',
+                    'overview_text',
+                    'author',
+                    'loadScreen',
+                ];
 
                 mission_attrs_in_order.forEach(
                     attr_name => {
@@ -374,36 +404,30 @@
                     }
                 );
 
-            //const mission_attrs_binary = [
-            //    'wog3_no_auto_long_range_radio',
-            //    'wmt_auto_med_provision',
-            //    'wmt_side_channel_by_lr',
-            //    'wmt_disable_fuel_stations',
-            //];
+                addDiv(
+                    msg.mission_attrs['wog3_no_auto_long_range_radio'] +
+                    ': ' +
+                    (report.mission_attrs['wog3_no_auto_long_range_radio'] ? '-' : '+')
+                );
 
-                if (report.mission_attrs['wog3_no_auto_long_range_radio']) {
 
-                    addDiv(`${msg.mission_attrs['wog3_no_auto_long_range_radio']}: ${report.mission_attrs['wog3_no_auto_long_range_radio'] ? '-' : '+'}`);
+                addDiv(
+                    msg.mission_attrs['wmt_auto_med_provision'] +
+                    ': ' +
+                    (report.mission_attrs['wmt_auto_med_provision'] ? '+' : '-')
+                );
 
-                }
+                addDiv(
+                    msg.mission_attrs['wmt_side_channel_by_lr'] +
+                    ': ' +
+                    (report.mission_attrs['wmt_side_channel_by_lr'] ? '+' : '-')
+                );
 
-                if (report.mission_attrs['wmt_auto_med_provision']) {
-
-                    addDiv(`${msg.mission_attrs['wmt_auto_med_provision']}: ${report.mission_attrs['wmt_auto_med_provision'] ? '+' : '-'}`);
-
-                }
-
-                if (report.mission_attrs['wmt_side_channel_by_lr']) {
-
-                    addDiv(`${msg.mission_attrs['wmt_side_channel_by_lr']}: ${report.mission_attrs['wmt_side_channel_by_lr'] ? '+' : '-'}`);
-
-                }
-
-                if (report.mission_attrs['wmt_disable_fuel_stations']) {
-
-                    addDiv(`${msg.mission_attrs['wmt_disable_fuel_stations']}: ${report.mission_attrs['wmt_disable_fuel_stations'] ? '-' : '+'}`);
-
-                }
+                addDiv(
+                    msg.mission_attrs['wmt_disable_fuel_stations'] +
+                    ': ' +
+                    (report.mission_attrs['wmt_disable_fuel_stations'] ? '-' : '+')
+                );
             }
 
             //check_results['slots']['total_count'] = total_playable_slots

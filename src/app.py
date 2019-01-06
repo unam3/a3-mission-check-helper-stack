@@ -20,6 +20,10 @@ app = Flask(__name__)
 
 #url_for('static', filename='style.css')
 
+def make_json(input):
+    
+    return json.dumps(json.dumps(input, ensure_ascii=False), ensure_ascii=False)
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
 
@@ -52,45 +56,43 @@ def index():
 
         #print os.getcwd()
 
-        extractpbo_error = False
-
         try:
 
             extract_pbo(path_to_save_uploaded_file)
 
         except ExtractpboError as error:
 
-            extractpbo_error = True
-            
             return render_template(
                 'report.html',
-                json=('\'{"errors": ["%s"]}\'' % (error.value.decode('utf-8')))
+                #json=('\'{"errors": {"extraction_error": "%s"}}\'' % (error.value.decode('utf-8')))
+                json=make_json({"errors": {"extraction_error": error.value}})
             )
 
 
-        # "mission.sqm wasn't binarized."
-        mission_was_binarized = was_mission_binarized(path_to_save_uploaded_file)
+        # TODO: check this case
+        mission_was_not_binarized = not was_mission_binarized(path_to_save_uploaded_file)
 
 
         path_to_extracted_mission = path_to_save_uploaded_file[:-4]
 
         check_results = check_mission(path_to_extracted_mission)
 
+
+        # put all errors in check_results
+        if (mission_was_not_binarized):
+            
+            check_results['errors']['mission_was_not_binarized'] = True
+
+        if (wrong_filename):
+            
+            check_results['errors']['wrong_filename'] = True
+
         
-        check_results_json = json.dumps(json.dumps(check_results, ensure_ascii=False), ensure_ascii=False)
+        check_results_json = make_json(check_results)
 
         return render_template(
             'report.html',
-            json=(
-                #str('').join([
-                #    check_results_json[:-3],
-                #    str(', \\"wrong_filename\\": true}"')
-                #])
-                #if wrong_filename
-                #else check_results_json[:-1]
-
-                check_results_json
-            )
+            json=check_results_json
         )
 
     else:
