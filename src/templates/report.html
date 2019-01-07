@@ -404,6 +404,33 @@
                     }
                 );
 
+
+                // TODO: apply error styles
+                const mission_attrs_warnings = [
+                    'wrong_briefing_name',
+                    'saving',
+                    'respawn',
+                    'respawn_rulesets',
+                    'enable_target_debugging',
+                    'wind',
+                    'rain',
+                ];
+
+                mission_attrs_warnings.forEach(
+                    attr_name => {
+                        const attribute_value = report.mission_attrs && report.mission_attrs[attr_name]
+
+                        console.log(attr_name, attribute_value);
+
+                        if (attribute_value) {
+                            //console.log(attr_name, msg.errors[attr_name]);
+
+                            addDiv(msg.errors[attr_name]);
+                        }
+                    }
+                );
+
+
                 addDiv(
                     msg.mission_attrs['wog3_no_auto_long_range_radio'] +
                     ': ' +
@@ -428,6 +455,7 @@
                     ': ' +
                     (report.mission_attrs['wmt_disable_fuel_stations'] ? '-' : '+')
                 );
+
             }
 
             //check_results['slots']['total_count'] = total_playable_slots
