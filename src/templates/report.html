@@ -361,7 +361,8 @@
 
                             addDiv(msg.errors[error] + report.errors[error].join(', '));
 
-                        } else {
+                        // filtering errors that we show in different places
+                        } else if (error !== 'has_unit_with_backpack_dup' && error !== 'unsupported_equipment_init') {
 
                             if (report.errors[error] !== true) {
 
@@ -587,21 +588,50 @@
 
             }
 
-            //if (report.slots && report.slots.unique_inits.length) {
-            //    report.slots.unique_inits.forEach(
-            //        ({splitted_init, init, has_no_radio, vanilla_equipment}) => {
-            //            
-            //            //addDiv(`${init} ${splitted_init} ${has_no_radio} ${vanilla_equipment}`)
+            if (report.slots && report.slots.unique_inits.length) {
 
-            //            const no_radio = has_no_radio ? ` ${msg.warnings.has_no_radio}` : '';
+                addDiv('Unique unit inits');
 
-            //            const has_vanilla_equipment = vanilla_equipment.length ?
-            //                ` ${msg.warnings.vanilla_equipment}` : '';
+                if (report.errors.has_unit_with_backpack_dup) {
 
-            //            addDiv(init + no_radio + has_vanilla_equipment);
-            //        }
-            //    );
-            //}
+                    addDiv(msg.errors.has_unit_with_backpack_dup);
+                
+                }
+
+                if (report.warnings.has_unit_without_personal_radio) {
+
+                    addDiv(msg.warnings.has_unit_without_personal_radio);
+                
+                }
+
+                if (report.errors.unsupported_equipment_init) {
+
+                    addDiv(
+                        msg.errors.unsupported_equipment_init +
+                        ': ' +
+                        report.errors.unsupported_equipment_init.join(', ')
+                    );
+                
+                }
+
+
+                report.slots.unique_inits.forEach(
+                    ({splitted_init, init, has_no_radio, backpack_will_dup, vanilla_equipment}) => {
+                        
+                        //addDiv(`${init} ${splitted_init} ${has_no_radio} ${vanilla_equipment}`)
+
+                        const no_radio = has_no_radio ? ` ${msg.warnings.has_no_radio}` : '';
+
+                        const dup_backpack = backpack_will_dup ? ` ${msg.errors.backpack_will_dup}` : '';
+
+                        const has_vanilla_equipment = (vanilla_equipment && vanilla_equipment.length) ?
+                            ` ${msg.errors.vanilla_equipment}: ${vanilla_equipment}` : '';
+
+                        addDiv(init + no_radio + has_vanilla_equipment + dup_backpack);
+                    }
+                );
+            }
+
         });
     </script>
 </head>
