@@ -18,7 +18,8 @@
           /* font-size: 16px; */
           font-size: 20px;
           margin: 2em auto;
-          max-width: 800px;
+          min-width: 800px;
+          max-width: 100%;
           padding: 1em;
           /* line-height: 1.4; */
           line-height: 1.8;
@@ -323,6 +324,31 @@
           font-family: monospace;
           font-size: .9em
         }
+
+        .squadUnit {
+            display: flex;
+        }
+
+        .squadUnit div {
+            padding-right: 1em;
+        }
+
+        .squadUnit div:last-child {
+            padding: 0;
+        }
+
+        .warning {
+            color: #b74c00;
+        }
+
+        .error {
+            color: #bb0a1e;
+        }
+
+        .unitType {
+            min-width: 10em;
+            max-width: 14em;
+        }
     </style>
 
     <script>
@@ -347,6 +373,23 @@
             const addDiv = (text) => main.appendChild(dummy.cloneNode())
                         .innerHTML = text;
 
+            //const addDummmyDiv = (text) => main.appendChild(dummy.cloneNode());
+
+            const appendEmptyTo = (parentNode) => parentNode.appendChild(dummy.cloneNode());
+
+            const addClassyDiv = (text, classesString) => {
+                
+                const clone = dummy.cloneNode();
+
+                clone.classList.add(classesString);
+
+                main.appendChild(clone).innerHTML = text;
+            };
+
+            const addWarning = (text) => addClassyDiv(text, 'warning');
+
+            const addError = (text) => addClassyDiv(text, 'error');
+
 
             //console.log(msg.errors, Object.keys(report.errors))
 
@@ -359,18 +402,18 @@
 
                         if (error === 'vanilla_equipment') {
 
-                            addDiv(msg.errors[error] + report.errors[error].join(', '));
+                            addError(msg.errors[error] + report.errors[error].join(', '));
 
                         // filtering errors that we show in different places
                         } else if (error !== 'has_unit_with_backpack_dup' && error !== 'unsupported_equipment_init') {
 
                             if (report.errors[error] !== true) {
 
-                                addDiv(msg.errors[error] + ' ' + report.errors[error]);
+                                addError(msg.errors[error] + ' ' + report.errors[error]);
 
                             } else {
                             
-                                addDiv(msg.errors[error]);
+                                addError(msg.errors[error]);
 
                             }
 
@@ -426,7 +469,7 @@
                         if (attribute_value) {
                             //console.log(attr_name, msg.errors[attr_name]);
 
-                            addDiv(msg.errors[attr_name]);
+                            addError(msg.errors[attr_name]);
                         }
                     }
                 );
@@ -541,50 +584,86 @@
 
             if (report.sides) {
 
-                const sides_n_shiet = Object.keys(report.sides).reduce(
+                Object.keys(report.sides).forEach(
 
-                    (str, side) => {
+                    (side) => {
 
-                        //addDiv(`${side} has ${report.slots.playable_slots[side]} playable slots\n`);
+                        addDiv(`\n${side} has ${report.slots.playable_slots[side]} playable slots\n`);
 
-                        return str +
-                            
-                            `\n${side} has ${report.slots.playable_slots[side]} playable slots\n` +
+                        const container = appendEmptyTo(main);
 
-                            report.sides[side].reduce(
+//                        report.sides[side].reduce(
+//
+//                            (squad_str, {units, groupID}, i) => {
+//
+//                                squad_str += `\n${groupID || (msg.slots.squad_default_name + i)}\n`;
+//
+//                                squad_str += units.reduce(
+//
+//                                    //(units_str, {isPlayable, init, type, description}) => unit.is_playable ?
+//                                    //    (playable_units_count + 1) : playable_units_count,
+//
+//                                    (units_str, {isPlayable, init, type, description, ace_isEngineer, ace_isMedic}) =>
+//                                        units_str +
+//                                            [
+//                                                description,
+//                                                (!isPlayable && 'this unit is not playable!') || '',
+//                                                type,
+//                                                isEngineer(ace_isEngineer) || '',
+//                                                isMedic(ace_isMedic) || '',
+//                                                init
+//                                            ].join(' ') +
+//                                            '\n',
+//                                    ''
+//                                );
+//
+//                                return squad_str;
+//                            },
+//                            ''
+//                        ) + '\n';
 
-                                (squad_str, {units, groupID}, i) => {
+                        report.sides[side].forEach(
+                            ({units, groupID}, i) => {
 
-                                    squad_str += `\n${groupID || (msg.slots.squad_default_name + i)}\n`;
+                                const squad = appendEmptyTo(main);
 
-                                    squad_str += units.reduce(
+                                const squadName = appendEmptyTo(squad);
 
-                                        //(units_str, {isPlayable, init, type, description}) => unit.is_playable ?
-                                        //    (playable_units_count + 1) : playable_units_count,
+                                squadName.innerHTML = `\n${groupID || (msg.slots.squad_default_name + i)}\n`;
 
-                                        (units_str, {isPlayable, init, type, description, ace_isEngineer, ace_isMedic}) =>
-                                            units_str +
-                                                [
-                                                    description,
-                                                    (!isPlayable && 'this unit is not playable!') || '',
-                                                    type,
-                                                    isEngineer(ace_isEngineer) || '',
-                                                    isMedic(ace_isMedic) || '',
-                                                    init
-                                                ].join(' ') +
-                                                '\n',
-                                        ''
-                                    );
+                                const squadUnits = appendEmptyTo(squad);
 
-                                    return squad_str;
-                                },
-                                ''
-                            ) + '\n';
-                    },
-                    ''
-                );
+                                units.forEach(
+                                    ({isPlayable, init, type, description, ace_isEngineer, ace_isMedic}) => {
+                                        const unit = appendEmptyTo(squadUnits);
 
-                addDiv(sides_n_shiet);
+                                        unit.classList.add('squadUnit');
+
+                                        [
+                                            type,
+                                            description,
+                                            isEngineer(ace_isEngineer),
+                                            isMedic(ace_isMedic),
+                                            (!isPlayable && msg.errors.not_playable_unit)//,
+                                            //init
+                                        ].forEach(
+                                            prop => {
+
+                                                const propDiv = appendEmptyTo(unit);
+
+                                                if (prop) {
+
+                                                    propDiv.innerHTML = prop;
+
+                                                }
+
+                                            }
+                                        );
+                                    }
+                                );
+                            }
+                        );
+                });
 
             }
 
@@ -594,24 +673,24 @@
 
                 if (report.errors.has_unit_with_backpack_dup) {
 
-                    addDiv(msg.errors.has_unit_with_backpack_dup);
-                
+                    addError(msg.errors.has_unit_with_backpack_dup);
+
                 }
 
                 if (report.warnings.has_unit_without_personal_radio) {
 
-                    addDiv(msg.warnings.has_unit_without_personal_radio);
+                    addWarning(msg.warnings.has_unit_without_personal_radio);
                 
                 }
 
                 if (report.errors.unsupported_equipment_init) {
 
-                    addDiv(
+                    addError(
                         msg.errors.unsupported_equipment_init +
                         ': ' +
                         report.errors.unsupported_equipment_init.join(', ')
                     );
-                
+
                 }
 
 
