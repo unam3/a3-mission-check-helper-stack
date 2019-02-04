@@ -345,6 +345,10 @@
             color: #bb0a1e;
         }
 
+        .squadTitle {
+            text-decoration: underline;
+        }
+
         .unitType {
             min-width: 10em;
             max-width: 14em;
@@ -711,6 +715,42 @@
                 );
             }
 
+            const addPercents = (str) => str ? ` ${str} %` : '';
+
+            if (report.vehicles_static_boxes && report.vehicles_static_boxes.length) {
+
+                addDiv('Vehicles, static, boxes');
+
+                report.vehicles_static_boxes.sort(
+                    ({is_box: is_box_a = false}, {is_box: is_box_b = false}) => {
+                    
+                        //console.log(is_box_a, is_box_b)
+
+                        if (!is_box_a && is_box_b) {
+
+                            return -1;
+
+                        }
+
+                        if (is_box_a && !is_box_b) {
+
+                            return 1;
+
+                        }
+
+                        return 0;
+                    }
+                ).forEach(
+                    ({name, type, init, is_box, lock, fuel, ammo, health}) => {
+                        
+                        //addDiv(`${init} ${splitted_init} ${has_no_radio} ${vanilla_equipment}`)
+
+                        //addDiv(init + no_radio + has_vanilla_equipment + dup_backpack);
+
+                        addDiv(`${name} ${type} ${init} ${lock} ${addPercents(fuel)} ${addPercents(ammo)} ${addPercents(health)}`)
+                    }
+                );
+            }
         });
     </script>
 </head>
