@@ -365,9 +365,12 @@
 
             const report_json = {{ json | safe }};
 
-            const report = JSON.parse(report_json);
+            // TODO: remove this line
+            console.log(JSON.parse(report_json));
 
-            console.log(report);
+            const report = JSON.parse(
+                report_json.replace(/</g, '&lt\;').replace(/>/g, '&gt\;')
+            );
 
             const main = document.getElementsByTagName('main')[0];
 
