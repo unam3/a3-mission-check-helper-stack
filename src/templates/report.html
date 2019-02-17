@@ -481,6 +481,12 @@
                     }
                 );
 
+                if (report.warnings.has_description_ext) {
+
+                    addWarning(msg.warnings.has_description_ext);
+                
+                }
+
 
                 addDiv(
                     msg.mission_attrs['wog3_no_auto_long_range_radio'] +
@@ -511,33 +517,7 @@
 
             //check_results['slots']['total_count'] = total_playable_slots
             //print '\nPlayable slots in total:', total_playable_slots
-
-            //check_results['slots']['total_count'] = total_playable_slots
             //print '\nThe number of slots on missions should not exceed 190.'
-
-            // total slot counts/ per side
-//            Object.keys(report.sides).reduce(
-//
-//                (units_per_side, side) => {
-//
-//                    units_per_side[side] = report.sides[side].reduce(
-//
-//                        (side_units_count, {units}) =>
-//
-//                            side_units_count + units.reduce(
-//                                (playable_units_count, unit) => unit.is_playable ?
-//                                    (playable_units_count + 1) : playable_units_count
-//                                0
-//                            )
-//                        ,
-//                        0
-//                    );
-//
-//                    return units_per_side;
-//                },
-//                {}
-//
-//            );
 
 
             const isMedic = (attr_value) => {
@@ -586,7 +566,7 @@
             
                 return false;
 
-            }
+            };
 
 
             if (report.sides) {
@@ -724,26 +704,27 @@
 
                 addDiv('Vehicles, static, boxes');
 
-                report.vehicles_static_boxes.sort(
-                    ({is_box: is_box_a = false}, {is_box: is_box_b = false}) => {
-                    
-                        //console.log(is_box_a, is_box_b)
+                //report.vehicles_static_boxes.sort(
+                //    ({is_box: is_box_a = false}, {is_box: is_box_b = false}) => {
+                //    
+                //        //console.log(is_box_a, is_box_b)
 
-                        if (!is_box_a && is_box_b) {
+                //        if (!is_box_a && is_box_b) {
 
-                            return -1;
+                //            return -1;
 
-                        }
+                //        }
 
-                        if (is_box_a && !is_box_b) {
+                //        if (is_box_a && !is_box_b) {
 
-                            return 1;
+                //            return 1;
 
-                        }
+                //        }
 
-                        return 0;
-                    }
-                ).forEach(
+                //        return 0;
+                //    }
+                //).forEach(
+                report.vehicles_static_boxes.forEach(
                     ({name, type, init, is_box, lock, fuel, ammo, health}) => {
                         
                         //addDiv(`${init} ${splitted_init} ${has_no_radio} ${vanilla_equipment}`)
