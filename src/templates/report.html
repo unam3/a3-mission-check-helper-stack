@@ -7,8 +7,13 @@
     <style>
         /* based on https://thebestmotherfucking.website/css/main.css */
 
+        * {
+            box-sizing: border-box;
+        }
+
         html {
           background-color: #fefefe
+          min-width: 1350px;
         }
 
         body {
@@ -353,6 +358,64 @@
             min-width: 10em;
             max-width: 14em;
         }
+
+        main {
+            display: flex;
+            flex-direction: column;
+        }
+
+        main > * {
+            margin-top: 1.5em;
+
+            /*
+            :first-child {
+                margin-top: 0;
+            }
+            */
+        }
+
+        .top {
+            display: flex;
+            flex-direction: row;
+        }
+
+        /*
+        .top > * {
+            margin-top: 1.5em;
+
+            :first-child {
+                margin-top: 0;
+            }
+        }
+        */
+
+        .flex-child {
+            background-color: #ffaaaf;
+        }
+
+        .half-parent-width {
+            width: 50%;
+        }
+
+        .gigantic-list {
+            
+        }
+
+        .list-item {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            margin-top: 1em;
+        }
+
+        .list-item > :first-child {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .list-item > :first-child > * {
+            margin-right: 2em;
+        }
     </style>
 
     <script>
@@ -374,67 +437,51 @@
 
             const main = document.getElementsByTagName('main')[0];
 
-            const dummy = document.createElement('div');
+            const emptyDiv = document.createElement('div');
+
+            const emptyCode = document.createElement('code');
 
 
-            const addDiv = (text) => main.appendChild(dummy.cloneNode())
-                        .innerHTML = text;
+            const addDiv = (text) => main.appendChild(
+                emptyDiv.cloneNode()
+            ).innerHTML = text;
 
-            //const addDummmyDiv = (text) => main.appendChild(dummy.cloneNode());
+            const appendEmptyTo = (parentNode) => parentNode.appendChild(emptyDiv.cloneNode());
 
-            const appendEmptyTo = (parentNode) => parentNode.appendChild(dummy.cloneNode());
-
-            const addClassyDiv = (text, classesString) => {
+            const addClassyEl = (el, parentNode, classesString) => {
                 
-                const clone = dummy.cloneNode();
+                const clone = el.cloneNode();
 
-                clone.classList.add(classesString);
+                if (classesString) {
 
-                main.appendChild(clone).innerHTML = text;
+                    clone.classList.add(...classesString.split(' '));
+
+                }
+
+                return parentNode.appendChild(clone);
             };
 
-            const addWarning = (text) => addClassyDiv(text, 'warning');
+            const addClassyDiv = (parentNode, classesString) => addClassyEl(emptyDiv, parentNode, classesString);
 
-            const addError = (text) => addClassyDiv(text, 'error');
+            const addClassyCode = (parentNode, classesString) => addClassyEl(emptyCode, parentNode, classesString);
+
+            const addWarning = (parentNode, text) => {
+                addClassyDiv(parentNode, 'warning').innerHTML = text;
+            };
+
+            const addError = (parentNode, text) => {
+                addClassyDiv(parentNode, 'error').innerHTML = text;
+            };
 
 
             //console.log(msg.errors, Object.keys(report.errors))
 
-            Object.keys(report.errors).forEach(
-                error => {
 
-                    console.log(error, msg.errors[error])
-
-                    if (msg.errors[error]) {
-
-                        if (error === 'vanilla_equipment') {
-
-                            addError(msg.errors[error] + report.errors[error].join(', '));
-
-                        // filtering errors that we show in different places
-                        } else if (error !== 'has_unit_with_backpack_dup' && error !== 'unsupported_equipment_init') {
-
-                            if (report.errors[error] !== true) {
-
-                                addError(msg.errors[error] + ' ' + report.errors[error]);
-
-                            } else {
-                            
-                                addError(msg.errors[error]);
-
-                            }
-
-                        }
-
-                    } else {
-                        
-                        throw 'unlocalized error';
-                    }
-                }
-            );
-
+            const topDiv = addClassyDiv(main, 'flex-child top');
 
             if (report.mission_attrs) {
+
+                const attrsDiv = addClassyDiv(topDiv, 'flex-child half-parent-width');
 
                 const mission_attrs_in_order = [
                     'briefing_name',
@@ -450,13 +497,13 @@
                         console.log(attr_name, attribute_value);
 
                         if (attribute_value) {
-                            addDiv(`${msg.mission_attrs[attr_name]}: ${attribute_value}`);
+                            addClassyDiv(attrsDiv)
+                                .innerHTML = `${msg.mission_attrs[attr_name]}: ${attribute_value}`;
                         }
                     }
                 );
 
 
-                // TODO: apply error styles
                 const mission_attrs_warnings = [
                     'wrong_briefing_name',
                     'saving',
@@ -476,233 +523,107 @@
                         if (attribute_value) {
                             //console.log(attr_name, msg.errors[attr_name]);
 
-                            addError(msg.errors[attr_name]);
+                            addError(attrsDiv, msg.errors[attr_name]);
                         }
                     }
                 );
 
-                if (report.warnings.has_description_ext) {
 
-                    addWarning(msg.warnings.has_description_ext);
-                
-                }
+                const binaryAttrs = addClassyDiv(topDiv, 'flex-child');
 
-
-                addDiv(
-                    msg.mission_attrs['wog3_no_auto_long_range_radio'] +
-                    ': ' +
-                    (report.mission_attrs['wog3_no_auto_long_range_radio'] ? '-' : '+')
-                );
-
-
-                addDiv(
-                    msg.mission_attrs['wmt_auto_med_provision'] +
-                    ': ' +
-                    (report.mission_attrs['wmt_auto_med_provision'] ? '+' : '-')
-                );
-
-                addDiv(
-                    msg.mission_attrs['wmt_side_channel_by_lr'] +
-                    ': ' +
-                    (report.mission_attrs['wmt_side_channel_by_lr'] ? '+' : '-')
-                );
-
-                addDiv(
-                    msg.mission_attrs['wmt_disable_fuel_stations'] +
-                    ': ' +
-                    (report.mission_attrs['wmt_disable_fuel_stations'] ? '-' : '+')
-                );
-
-            }
-
-            //check_results['slots']['total_count'] = total_playable_slots
-            //print '\nPlayable slots in total:', total_playable_slots
-            //print '\nThe number of slots on missions should not exceed 190.'
-
-
-            const isMedic = (attr_value) => {
-
-                if (attr_value === '0.0') {
-
-                    return '"None" regular unit medical abillities';
-
-                } else if (attr_value === '1.0') {
-
-                    return '"Regular medic"';
-
-                } else if (attr_value === '2.0') {
-
-                    return '"Doctor"';
-
-                } else if (typeof attr_value !== 'undefined') {
-
-                    return 'Unusual "ace_isMedic" attribute value: ' + attr_value;
-
-                }
-
-                return false;
-
-            };
-
-            const isEngineer = (attr_value) => {
-            
-                if (attr_value == '0.0') {
-                    
-                    return 'Unit Engineer abillities is off';
-            
-                } else if (attr_value == '1.0') {
-                    
-                    return '"Engineer"';
-            
-                } else if (attr_value == '2.0') {
-                    
-                    return '"Advanced Engineer"';
-            
-                } else if (typeof attr_value !== 'undefined') {
-                    
-                    return 'Unusual "ace_isEngineer" attribute value: ' + attr_value;
-
-                }
-            
-                return false;
-
-            };
-
-
-            if (report.sides) {
-
-                Object.keys(report.sides).forEach(
-
-                    (side) => {
-
-                        addDiv(`\n${side} has ${report.slots.playable_slots[side]} playable slots\n`);
-
-                        const container = appendEmptyTo(main);
-
-//                        report.sides[side].reduce(
-//
-//                            (squad_str, {units, groupID}, i) => {
-//
-//                                squad_str += `\n${groupID || (msg.slots.squad_default_name + i)}\n`;
-//
-//                                squad_str += units.reduce(
-//
-//                                    //(units_str, {isPlayable, init, type, description}) => unit.is_playable ?
-//                                    //    (playable_units_count + 1) : playable_units_count,
-//
-//                                    (units_str, {isPlayable, init, type, description, ace_isEngineer, ace_isMedic}) =>
-//                                        units_str +
-//                                            [
-//                                                description,
-//                                                (!isPlayable && 'this unit is not playable!') || '',
-//                                                type,
-//                                                isEngineer(ace_isEngineer) || '',
-//                                                isMedic(ace_isMedic) || '',
-//                                                init
-//                                            ].join(' ') +
-//                                            '\n',
-//                                    ''
-//                                );
-//
-//                                return squad_str;
-//                            },
-//                            ''
-//                        ) + '\n';
-
-                        report.sides[side].forEach(
-                            ({units, groupID}, i) => {
-
-                                const squad = appendEmptyTo(main);
-
-                                const squadName = appendEmptyTo(squad);
-
-                                squadName.innerHTML = `\n${groupID || (msg.slots.squad_default_name + i)}\n`;
-
-                                const squadUnits = appendEmptyTo(squad);
-
-                                units.forEach(
-                                    ({isPlayable, init, type, description, ace_isEngineer, ace_isMedic}) => {
-                                        const unit = appendEmptyTo(squadUnits);
-
-                                        unit.classList.add('squadUnit');
-
-                                        [
-                                            type,
-                                            description,
-                                            isEngineer(ace_isEngineer),
-                                            isMedic(ace_isMedic),
-                                            (!isPlayable && msg.errors.not_playable_unit)//,
-                                            //init
-                                        ].forEach(
-                                            prop => {
-
-                                                const propDiv = appendEmptyTo(unit);
-
-                                                if (prop) {
-
-                                                    propDiv.innerHTML = prop;
-
-                                                }
-
-                                            }
-                                        );
-                                    }
-                                );
-                            }
-                        );
-                });
-
-            }
-
-            if (report.slots && report.slots.unique_inits.length) {
-
-                addDiv('Unique unit inits');
-
-                if (report.errors.has_unit_with_backpack_dup) {
-
-                    addError(msg.errors.has_unit_with_backpack_dup);
-
-                }
-
-                if (report.warnings.has_unit_without_personal_radio) {
-
-                    addWarning(msg.warnings.has_unit_without_personal_radio);
-                
-                }
-
-                if (report.errors.unsupported_equipment_init) {
-
-                    addError(
-                        msg.errors.unsupported_equipment_init +
+                // REFACTOR
+                addClassyDiv(binaryAttrs, 'flex-child')
+                    .innerHTML = (
+                        msg.mission_attrs['wog3_no_auto_long_range_radio'] +
                         ': ' +
-                        report.errors.unsupported_equipment_init.join(', ')
+                        (report.mission_attrs['wog3_no_auto_long_range_radio'] ? '-' : '+')
                     );
 
-                }
 
+                addClassyDiv(binaryAttrs, 'flex-child')
+                    .innerHTML = (
+                        msg.mission_attrs['wmt_auto_med_provision'] +
+                        ': ' +
+                        (report.mission_attrs['wmt_auto_med_provision'] ? '+' : '-')
+                    );
 
-                report.slots.unique_inits.forEach(
-                    ({splitted_init, init, has_no_radio, backpack_will_dup, vanilla_equipment}) => {
-                        
-                        //addDiv(`${init} ${splitted_init} ${has_no_radio} ${vanilla_equipment}`)
+                addClassyDiv(binaryAttrs, 'flex-child')
+                    .innerHTML = (
+                        msg.mission_attrs['wmt_side_channel_by_lr'] +
+                        ': ' +
+                        (report.mission_attrs['wmt_side_channel_by_lr'] ? '+' : '-')
+                    );
 
-                        const no_radio = has_no_radio ? ` ${msg.warnings.has_no_radio}` : '';
+                addClassyDiv(binaryAttrs, 'flex-child')
+                    .innerHTML = (
+                        msg.mission_attrs['wmt_disable_fuel_stations'] +
+                        ': ' +
+                        (report.mission_attrs['wmt_disable_fuel_stations'] ? '-' : '+')
+                    );
 
-                        const dup_backpack = backpack_will_dup ? ` ${msg.errors.backpack_will_dup}` : '';
-
-                        const has_vanilla_equipment = (vanilla_equipment && vanilla_equipment.length) ?
-                            ` ${msg.errors.vanilla_equipment}: ${vanilla_equipment}` : '';
-
-                        addDiv(init + no_radio + has_vanilla_equipment + dup_backpack);
-                    }
-                );
             }
 
-            const addPercents = (str) => str ? ` ${str} %` : '';
+            const errorsDiv = addClassyDiv(main, 'flex-child');
+
+            if (report.warnings.has_description_ext) {
+
+                addWarning(errorsDiv, msg.warnings.has_description_ext);
+
+            }
+
+
+            Object.keys(report.errors).forEach(
+                error => {
+
+                    console.log(error, msg.errors[error])
+
+                    if (msg.errors[error]) {
+
+                        if (error === 'vanilla_equipment') {
+
+                            addError(errorsDiv, msg.errors[error] + report.errors[error].join(', '));
+
+                        // filtering errors that we show in different places
+                        } else if (error !== 'has_unit_with_backpack_dup' && error !== 'unsupported_equipment_init') {
+
+                            if (report.errors[error] !== true) {
+
+                                addError(errorsDiv, msg.errors[error] + ' ' + report.errors[error]);
+
+                            } else {
+                            
+                                addError(errorsDiv, msg.errors[error]);
+
+                            }
+
+                        }
+
+                    } else {
+                        
+                        throw 'unlocalized error';
+                    }
+                }
+            );
+
+
+            const playable_slots_count = Object.keys(report.slots.playable_slots)
+                .reduce((acc, side) => acc + report.slots.playable_slots[side], 0);
+
+            if (playable_slots_count > 190) {
+                
+                addError(errorsDiv, msg.errors.too_many_slots);
+
+            }
+
 
             if (report.vehicles_static_boxes && report.vehicles_static_boxes.length) {
 
-                addDiv('Vehicles, static, boxes');
+                const addPercents = (str) => str ? ` ${str} %` : '';
+
+                const vehiclesStaticBoxesDiv = addClassyDiv(main, 'flex-child');
+
+                addClassyDiv(vehiclesStaticBoxesDiv, 'flex-child')
+                    .innerHTML = msg.headings.vehicles_static_boxes;
 
                 //report.vehicles_static_boxes.sort(
                 //    ({is_box: is_box_a = false}, {is_box: is_box_b = false}) => {
@@ -724,17 +645,274 @@
                 //        return 0;
                 //    }
                 //).forEach(
+
+                const vehiclesStaticBoxesListDiv = addClassyDiv(vehiclesStaticBoxesDiv, 'flex-child gigantic-list');
+
                 report.vehicles_static_boxes.forEach(
-                    ({name, type, init, is_box, lock, fuel, ammo, health}) => {
+                    ({name, type, description, init, is_box, lock, fuel, ammo, health, ace_isMedicalVehicle,
+                        ace_isRepairVehicle}) => {
+
+                        const listItem = addClassyDiv(vehiclesStaticBoxesListDiv, 'flex-child list-item');
                         
-                        //addDiv(`${init} ${splitted_init} ${has_no_radio} ${vanilla_equipment}`)
+                        const listItemFirstRow = addClassyDiv(listItem, 'flex-child');
 
-                        //addDiv(init + no_radio + has_vanilla_equipment + dup_backpack);
+                        addClassyDiv(listItemFirstRow, 'flex-child').innerHTML = `${name} (${type}) ${description || ''}`;
 
-                        addDiv(`${name} ${type} ${init} ${lock} ${addPercents(fuel)} ${addPercents(ammo)} ${addPercents(health)}`)
+                        if (!is_box) {
+
+                            addClassyDiv(listItemFirstRow, 'flex-child')
+                                .innerHTML = lock || '';
+
+                            addClassyDiv(listItemFirstRow, 'flex-child')
+                                .innerHTML = addPercents(fuel);
+
+                            addClassyDiv(listItemFirstRow, 'flex-child')
+                                .innerHTML = addPercents(ammo);
+
+                            if (health) {
+
+                                addClassyDiv(listItemFirstRow, 'flex-child')
+                                    .innerHTML = `&#10084; ${addPercents(health)}`;
+                            }
+
+                            addClassyDiv(listItemFirstRow, 'flex-child')
+                                .innerHTML = ace_isMedicalVehicle || '';
+
+                            addClassyDiv(listItemFirstRow, 'flex-child')
+                                .innerHTML = ace_isRepairVehicle || '';
+                        }
+
+
+                        if (init) {
+
+                            addClassyCode(listItem, 'flex-child')
+                                .innerHTML = init;
+
+                        }
+
+                        //if (!is_box) {
+
+                        //    const notBoxDiv = addClassyDiv(listItem, 'flex-child');
+
+                        //    addClassyDiv(notBoxDiv, 'flex-child')
+                        //        .innerHTML = lock || '';
+
+                        //    addClassyDiv(notBoxDiv, 'flex-child')
+                        //        .innerHTML = addPercents(fuel);
+
+                        //    addClassyDiv(notBoxDiv, 'flex-child')
+                        //        .innerHTML = addPercents(ammo);
+
+                        //    if (health) {
+
+                        //        addClassyDiv(notBoxDiv, 'flex-child')
+                        //            .innerHTML = `&#10084; ${addPercents(health)}`;
+                        //    }
+                        //}
                     }
                 );
             }
+
+
+            if (report.sides) {
+
+                const isMedic = (attr_value) => {
+
+                    if (attr_value === '0.0' || attr_value === '1.0' || attr_value === '2.0') {
+
+                        return msg.slots.ace_isMedic[attr_value];
+
+                    } else if (typeof attr_value !== 'undefined') {
+
+                        return msg.slots.ace_isMedic.unusual_value + attr_value;
+
+                    }
+                };
+
+                const isEngineer = (attr_value) => {
+                
+                    if (attr_value === '0.0' || attr_value === '1.0' || attr_value === '2.0') {
+                
+                        return msg.slots.ace_isEngineer[attr_value];
+
+                    } else if (typeof attr_value !== 'undefined') {
+                        
+                        return msg.slots.ace_isEngineer.unusual_value + attr_value;
+
+                    }
+                };
+
+                const unitsDiv = addClassyDiv(main, 'flex-child');
+
+                addClassyDiv(unitsDiv, 'flex-child')
+                    .innerHTML = msg.headings.units;
+
+                Object.keys(report.sides).forEach(
+
+                    (side) => {
+
+                        const sideUnitsContainer = addClassyDiv(unitsDiv, 'flex-child');
+
+                        //addClassyDiv(sideUnitsContainer, 'flex-child')
+                        //    .innerHTML = msg.slots.side_playable_slots_count;
+
+                        //addDiv(`\n${side} has ${report.slots.playable_slots[side]} playable slots\n`);
+
+                        report.sides[side].forEach(
+                            ({units, groupID}, i) => {
+
+                                const squad = addClassyDiv(sideUnitsContainer, 'flex-child');
+
+                                const squadName = addClassyDiv(squad, 'flex-child list-item')
+                                    .innerHTML = `\n${groupID || (msg.slots.squad_default_name + i)}\n`;
+
+                                const squadUnits = addClassyDiv(squad, 'flex-child');
+
+                                units.forEach(
+                                    // unit_name?
+                                    ({isPlayable, init, has_inventory, type, description, ace_isEngineer,
+                                        ace_isMedic}) => {
+
+                                        const unit = addClassyDiv(squadUnits, 'flex-child squadUnit list-item');
+
+                                        const typeAndDescriptionDiv = addClassyDiv(
+                                            unit,
+                                            'flex-child squadUnit'
+                                        );
+
+                                        addClassyDiv(
+                                            typeAndDescriptionDiv,
+                                            'flex-child'
+                                        ).innerHTML = type;
+
+                                        if (description) {
+
+                                            addClassyDiv(
+                                                typeAndDescriptionDiv,
+                                                'flex-child'
+                                            ).innerHTML = description;
+
+                                        }
+
+                                        if (ace_isEngineer || ace_isMedic) {
+
+                                            const skillsDiv = addClassyDiv(
+                                                unit,
+                                                'flex-child'
+                                            );
+
+                                            if (ace_isEngineer) {
+
+                                                addClassyDiv(
+                                                    skillsDiv,
+                                                    'flex-child'
+                                                ).innerHTML = isEngineer(ace_isEngineer);
+
+                                            }
+
+                                            if (ace_isMedic) {
+
+                                                addClassyDiv(
+                                                    skillsDiv,
+                                                    'flex-child'
+                                                ).innerHTML = isMedic(ace_isMedic);
+
+                                            }
+                                        }
+
+                                        if (!isPlayable) {
+
+                                            addClassyDiv(
+                                                unit,
+                                                'flex-child error'
+                                            ).innerHTML = msg.errors.not_playable_unit;
+
+                                        }
+
+                                        if (has_inventory && !init) {
+
+                                            addClassyDiv(
+                                                unit,
+                                                'flex-child error'
+                                            ).innerHTML = msg.errors.unit_has_inventory_without_init;
+
+                                        }
+
+                                    }
+                                );
+                            }
+                        );
+                });
+
+            }
+
+            if (report.slots && report.slots.unique_inits.length) {
+
+                const uniqUnitInitsDiv = addClassyDiv(main, 'flex-child');
+
+                addClassyDiv(uniqUnitInitsDiv, 'flex-child')
+                    .innerHTML = msg.headings.uniq_unit_inits;
+
+
+                if (report.errors.has_unit_with_backpack_dup) {
+
+                    addError(uniqUnitInitsDiv, msg.errors.has_unit_with_backpack_dup);
+
+                }
+
+                if (report.warnings.has_unit_without_personal_radio) {
+
+                    addWarning(uniqUnitInitsDiv, msg.warnings.has_unit_without_personal_radio);
+                
+                }
+
+                if (report.errors.unsupported_equipment_init) {
+
+                    addError(
+                        uniqUnitInitsDiv, 
+                        msg.errors.unsupported_equipment_init +
+                        ': ' +
+                        report.errors.unsupported_equipment_init.join(', ')
+                    );
+
+                }
+
+
+                report.slots.unique_inits.forEach(
+                    ({splitted_init, init, unsupported_equipment_init, has_no_radio, backpack_will_dup, vanilla_equipment}) => {
+                        
+                        const uniqInitDiv = addClassyDiv(uniqUnitInitsDiv, 'flex-child');
+
+                        addClassyCode(
+                            uniqUnitInitsDiv,
+                            unsupported_equipment_init ? 'flex-child warning' : 'flex-child'
+                        ).innerHTML = unsupported_equipment_init ?
+                            init + msg.warnings.unsupported_equipment_init : init;
+
+                        if (has_no_radio) {
+
+                            addClassyDiv(uniqUnitInitsDiv, 'flex-child warning')
+                                .innerHTML = msg.warnings.has_no_personal_radio;
+
+                        }
+
+                        if (backpack_will_dup) {
+
+                            addClassyDiv(uniqUnitInitsDiv, 'flex-child error')
+                                .innerHTML = msg.errors.backpack_will_dup;
+
+                        }
+
+                        if (vanilla_equipment && vanilla_equipment.length) {
+
+                            addClassyDiv(uniqUnitInitsDiv, 'flex-child error')
+                                .innerHTML = `${msg.errors.vanilla_equipment}: ${vanilla_equipment}`;
+
+                        }
+                    }
+                );
+            }
+
         });
     </script>
 </head>
