@@ -48,11 +48,9 @@ def index():
         path_to_save_uploaded_file = path_to_uploads + file_storage_instance.filename
 
         # two separate open because python2 with 'r+' mode I'll get "no such file" error
-        file_to_write = open(path_to_save_uploaded_file, 'w')
+        with open(path_to_save_uploaded_file, 'w') as file_to_write:
 
-        file_storage_instance.save(path_to_save_uploaded_file)
-
-        file_to_write.close()
+            file_storage_instance.save(path_to_save_uploaded_file)
 
         #print os.getcwd()
 
