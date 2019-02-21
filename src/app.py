@@ -45,6 +45,15 @@ def index():
 
             wrong_filename = True
 
+            check_results = {'errors': {'wrong_filename': True}}
+
+            check_results_json = make_json(check_results)
+
+            return render_template(
+                'report.html',
+                json=check_results_json
+            )
+
         path_to_save_uploaded_file = path_to_uploads + file_storage_instance.filename
 
         # two separate open because python2 with 'r+' mode I'll get "no such file" error
@@ -76,16 +85,10 @@ def index():
         check_results = check_mission(path_to_extracted_mission)
 
 
-        # put all errors in check_results
         if (mission_was_not_binarized):
             
             check_results['errors']['mission_was_not_binarized'] = True
 
-        if (wrong_filename):
-            
-            check_results['errors']['wrong_filename'] = True
-
-        
         check_results_json = make_json(check_results)
 
         return render_template(

@@ -473,6 +473,13 @@
                 addClassyDiv(parentNode, 'error').innerHTML = text;
             };
 
+            if (report.errors && report.errors.wrong_filename) {
+            
+                addError(main, msg.errors.wrong_filename);
+
+                return;
+
+            }
 
             //console.log(msg.errors, Object.keys(report.errors))
 
