@@ -682,11 +682,18 @@
                                     .innerHTML = `&#10084; ${addPercents(health)}`;
                             }
 
-                            addClassyDiv(listItemFirstRow, 'flex-child')
-                                .innerHTML = ace_isMedicalVehicle || '';
+                            if (ace_isMedicalVehicle == '1.0') {
 
-                            addClassyDiv(listItemFirstRow, 'flex-child')
-                                .innerHTML = ace_isRepairVehicle || '';
+                                addClassyDiv(listItemFirstRow, 'flex-child')
+                                    .innerHTML = msg.vehicles.ace_isMedicalVehicle;
+                            }
+
+                            if (ace_isRepairVehicle == '1.0') {
+
+                                addClassyDiv(listItemFirstRow, 'flex-child')
+                                    .innerHTML = msg.vehicles.ace_isRepairVehicle;
+
+                            }
                         }
 
 
