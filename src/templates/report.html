@@ -625,8 +625,6 @@
 
             if (report.vehicles_static_boxes && report.vehicles_static_boxes.length) {
 
-                const addPercents = (str) => str ? ` ${str} %` : '';
-
                 const vehiclesStaticBoxesDiv = addClassyDiv(main, 'flex-child');
 
                 addClassyDiv(vehiclesStaticBoxesDiv, 'flex-child')
@@ -670,16 +668,23 @@
                             addClassyDiv(listItemFirstRow, 'flex-child')
                                 .innerHTML = lock || '';
 
-                            addClassyDiv(listItemFirstRow, 'flex-child')
-                                .innerHTML = addPercents(fuel);
-
-                            addClassyDiv(listItemFirstRow, 'flex-child')
-                                .innerHTML = addPercents(ammo);
-
-                            if (health) {
+                            if (typeof fuel === 'number') {
 
                                 addClassyDiv(listItemFirstRow, 'flex-child')
-                                    .innerHTML = `&#10084; ${addPercents(health)}`;
+                                    .innerHTML = `${fuel}%`;
+                            }
+
+                            if (typeof ammo === 'number') {
+
+                                addClassyDiv(listItemFirstRow, 'flex-child')
+                                    .innerHTML = `${ammo}%`;
+
+                            }
+
+                            if (typeof health === 'number') {
+
+                                addClassyDiv(listItemFirstRow, 'flex-child')
+                                    .innerHTML = `&#10084; ${health}%`;
                             }
 
                             if (ace_isMedicalVehicle == '1.0') {
@@ -761,6 +766,17 @@
                 addClassyDiv(unitsDiv, 'flex-child')
                     .innerHTML = msg.headings.units;
 
+                const uniq_init_map = report.slots.unique_inits.reduce(
+                    
+                    (acc, {init}, i) => {
+                        
+                        acc[init] = i;
+
+                        return acc;
+                    },
+                    {}
+                );
+
                 Object.keys(report.sides).forEach(
 
                     (side) => {
@@ -805,6 +821,15 @@
                                                 typeAndDescriptionDiv,
                                                 'flex-child'
                                             ).innerHTML = description;
+
+                                        }
+
+                                        if (init) {
+
+                                            addClassyDiv(
+                                                typeAndDescriptionDiv,
+                                                'flex-child'
+                                            ).innerHTML = `<a href="#n${uniq_init_map[init]}">go to eq init</a>`;
 
                                         }
 
@@ -893,14 +918,22 @@
 
 
                 report.slots.unique_inits.forEach(
-                    ({splitted_init, init, unsupported_equipment_init, has_no_radio, backpack_will_dup, vanilla_equipment}) => {
+                    (
+                        {splitted_init, init, unsupported_equipment_init, has_no_radio, backpack_will_dup,
+                            vanilla_equipment},
+                        i
+                    ) => {
                         
                         const uniqInitDiv = addClassyDiv(uniqUnitInitsDiv, 'flex-child');
 
-                        addClassyCode(
+                        const initCode = addClassyCode(
                             uniqUnitInitsDiv,
                             unsupported_equipment_init ? 'flex-child warning' : 'flex-child'
-                        ).innerHTML = unsupported_equipment_init ?
+                        );
+
+                        initCode.id = 'n' + i;
+
+                        initCode.innerHTML = unsupported_equipment_init ?
                             init + msg.warnings.unsupported_equipment_init : init;
 
                         if (has_no_radio) {
