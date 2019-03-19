@@ -11,6 +11,10 @@
             box-sizing: border-box;
         }
 
+        *:empty {
+            display: none;
+        }
+
         html {
           background-color: #fefefe
           min-width: 1350px;
@@ -415,6 +419,10 @@
 
         .list-item > :first-child > * {
             margin-right: 2em;
+        }
+
+        .uniq-unit-inits .init {
+            display: block;
         }
     </style>
 
@@ -905,8 +913,6 @@
                         i
                     ) => {
                         
-                        const uniqInitDiv = addClassyDiv(uniqUnitInitsDiv, 'flex-child uniq-unit-init');
-
                         const initCode = addClassyCode(
                             uniqUnitInitsDiv,
                             unsupported_equipment_init ? 'flex-child init warning' : 'flex-child init'
