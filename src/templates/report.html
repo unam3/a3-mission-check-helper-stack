@@ -671,13 +671,13 @@
                             if (typeof fuel === 'number') {
 
                                 addClassyDiv(listItemFirstRow, 'flex-child')
-                                    .innerHTML = `${fuel}%`;
+                                    .innerHTML = `fuel ${fuel}%`;
                             }
 
                             if (typeof ammo === 'number') {
 
                                 addClassyDiv(listItemFirstRow, 'flex-child')
-                                    .innerHTML = `${ammo}%`;
+                                    .innerHTML = `ammo ${ammo}%`;
 
                             }
 
@@ -794,7 +794,7 @@
                                 const squad = addClassyDiv(sideUnitsContainer, 'flex-child');
 
                                 const squadName = addClassyDiv(squad, 'flex-child list-item')
-                                    .innerHTML = `\n${groupID || (msg.slots.squad_default_name + i)}\n`;
+                                    .innerHTML = `\n${groupID || (msg.slots.squad_default_name + (i + 1))}\n`;
 
                                 const squadUnits = addClassyDiv(squad, 'flex-child');
 
