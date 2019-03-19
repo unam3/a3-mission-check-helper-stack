@@ -330,15 +330,15 @@
           font-size: .9em
         }
 
-        .squadUnit {
+        .squad-unit {
             display: flex;
         }
 
-        .squadUnit div {
+        .squad-unit div {
             padding-right: 1em;
         }
 
-        .squadUnit div:last-child {
+        .squad-unit div:last-child {
             padding: 0;
         }
 
@@ -484,9 +484,9 @@
             //console.log(msg.errors, Object.keys(report.errors))
 
 
-            const topDiv = addClassyDiv(main, 'flex-child top');
-
             if (report.mission_attrs) {
+
+                const topDiv = addClassyDiv(main, 'flex-child top mission-attrs__warnings__wmt');
 
                 const attrsDiv = addClassyDiv(topDiv, 'flex-child half-parent-width');
 
@@ -536,7 +536,7 @@
                 );
 
 
-                const binaryAttrs = addClassyDiv(topDiv, 'flex-child');
+                const binaryAttrs = addClassyDiv(topDiv, 'flex-child wmt__other_binary_attrs');
 
                 // REFACTOR
                 addClassyDiv(binaryAttrs, 'flex-child')
@@ -570,7 +570,8 @@
 
             }
 
-            const errorsDiv = addClassyDiv(main, 'flex-child');
+
+            const errorsDiv = addClassyDiv(main, 'flex-child errors');
 
             if (report.warnings.has_description_ext) {
 
@@ -625,9 +626,9 @@
 
             if (report.vehicles_static_boxes && report.vehicles_static_boxes.length) {
 
-                const vehiclesStaticBoxesDiv = addClassyDiv(main, 'flex-child');
+                const vehiclesStaticBoxesDiv = addClassyDiv(main, 'flex-child vehicles__static__boxes');
 
-                addClassyDiv(vehiclesStaticBoxesDiv, 'flex-child')
+                addClassyDiv(vehiclesStaticBoxesDiv, 'flex-child heading')
                     .innerHTML = msg.headings.vehicles_static_boxes;
 
                 //report.vehicles_static_boxes.sort(
@@ -659,7 +660,7 @@
 
                         const listItem = addClassyDiv(vehiclesStaticBoxesListDiv, 'flex-child list-item');
                         
-                        const listItemFirstRow = addClassyDiv(listItem, 'flex-child');
+                        const listItemFirstRow = addClassyDiv(listItem, 'flex-child first-row');
 
                         addClassyDiv(listItemFirstRow, 'flex-child').innerHTML = `${name} (${type}) ${description || ''}`;
 
@@ -704,30 +705,10 @@
 
                         if (init) {
 
-                            addClassyCode(listItem, 'flex-child')
+                            addClassyCode(listItem, 'flex-child second-row')
                                 .innerHTML = init;
 
                         }
-
-                        //if (!is_box) {
-
-                        //    const notBoxDiv = addClassyDiv(listItem, 'flex-child');
-
-                        //    addClassyDiv(notBoxDiv, 'flex-child')
-                        //        .innerHTML = lock || '';
-
-                        //    addClassyDiv(notBoxDiv, 'flex-child')
-                        //        .innerHTML = addPercents(fuel);
-
-                        //    addClassyDiv(notBoxDiv, 'flex-child')
-                        //        .innerHTML = addPercents(ammo);
-
-                        //    if (health) {
-
-                        //        addClassyDiv(notBoxDiv, 'flex-child')
-                        //            .innerHTML = `&#10084; ${addPercents(health)}`;
-                        //    }
-                        //}
                     }
                 );
             }
@@ -761,9 +742,9 @@
                     }
                 };
 
-                const unitsDiv = addClassyDiv(main, 'flex-child');
+                const unitsDiv = addClassyDiv(main, 'flex-child units');
 
-                addClassyDiv(unitsDiv, 'flex-child')
+                addClassyDiv(unitsDiv, 'flex-child heading')
                     .innerHTML = msg.headings.units;
 
                 const uniq_init_map = report.slots.unique_inits.reduce(
@@ -781,7 +762,7 @@
 
                     (side) => {
 
-                        const sideUnitsContainer = addClassyDiv(unitsDiv, 'flex-child');
+                        const sideUnitsContainer = addClassyDiv(unitsDiv, 'flex-child side-container');
 
                         //addClassyDiv(sideUnitsContainer, 'flex-child')
                         //    .innerHTML = msg.slots.side_playable_slots_count;
@@ -791,35 +772,35 @@
                         report.sides[side].forEach(
                             ({units, groupID}, i) => {
 
-                                const squad = addClassyDiv(sideUnitsContainer, 'flex-child');
+                                const squad = addClassyDiv(sideUnitsContainer, 'flex-child squad');
 
-                                const squadName = addClassyDiv(squad, 'flex-child list-item')
+                                const squadName = addClassyDiv(squad, 'flex-child list-item squad-name')
                                     .innerHTML = `\n${groupID || (msg.slots.squad_default_name + (i + 1))}\n`;
 
-                                const squadUnits = addClassyDiv(squad, 'flex-child');
+                                const squadUnits = addClassyDiv(squad, 'flex-child squad-units');
 
                                 units.forEach(
                                     // unit_name?
                                     ({isPlayable, init, has_inventory, type, description, ace_isEngineer,
                                         ace_isMedic}) => {
 
-                                        const unit = addClassyDiv(squadUnits, 'flex-child squadUnit list-item');
+                                        const unit = addClassyDiv(squadUnits, 'flex-child squad-unit list-item');
 
                                         const typeAndDescriptionDiv = addClassyDiv(
                                             unit,
-                                            'flex-child squadUnit'
+                                            'flex-child type__description'
                                         );
 
                                         addClassyDiv(
                                             typeAndDescriptionDiv,
-                                            'flex-child'
+                                            'flex-child type'
                                         ).innerHTML = type;
 
                                         if (description) {
 
                                             addClassyDiv(
                                                 typeAndDescriptionDiv,
-                                                'flex-child'
+                                                'flex-child description'
                                             ).innerHTML = description;
 
                                         }
@@ -828,7 +809,7 @@
 
                                             addClassyDiv(
                                                 typeAndDescriptionDiv,
-                                                'flex-child'
+                                                'flex-child link-to-init'
                                             ).innerHTML = `<a href="#n${uniq_init_map[init]}">go to eq init</a>`;
 
                                         }
@@ -837,14 +818,14 @@
 
                                             const skillsDiv = addClassyDiv(
                                                 unit,
-                                                'flex-child'
+                                                'flex-child skills'
                                             );
 
                                             if (ace_isEngineer) {
 
                                                 addClassyDiv(
                                                     skillsDiv,
-                                                    'flex-child'
+                                                    'flex-child isEngineer'
                                                 ).innerHTML = isEngineer(ace_isEngineer);
 
                                             }
@@ -853,7 +834,7 @@
 
                                                 addClassyDiv(
                                                     skillsDiv,
-                                                    'flex-child'
+                                                    'flex-child isMedic'
                                                 ).innerHTML = isMedic(ace_isMedic);
 
                                             }
@@ -863,7 +844,7 @@
 
                                             addClassyDiv(
                                                 unit,
-                                                'flex-child error'
+                                                'flex-child error not_playable_unit'
                                             ).innerHTML = msg.errors.not_playable_unit;
 
                                         }
@@ -872,7 +853,7 @@
 
                                             addClassyDiv(
                                                 unit,
-                                                'flex-child error'
+                                                'flex-child error unit_has_inventory_without_init'
                                             ).innerHTML = msg.errors.unit_has_inventory_without_init;
 
                                         }
@@ -887,9 +868,9 @@
 
             if (report.slots && report.slots.unique_inits.length) {
 
-                const uniqUnitInitsDiv = addClassyDiv(main, 'flex-child');
+                const uniqUnitInitsDiv = addClassyDiv(main, 'flex-child uniq-unit-inits');
 
-                addClassyDiv(uniqUnitInitsDiv, 'flex-child')
+                addClassyDiv(uniqUnitInitsDiv, 'flex-child heading')
                     .innerHTML = msg.headings.uniq_unit_inits;
 
 
@@ -924,11 +905,11 @@
                         i
                     ) => {
                         
-                        const uniqInitDiv = addClassyDiv(uniqUnitInitsDiv, 'flex-child');
+                        const uniqInitDiv = addClassyDiv(uniqUnitInitsDiv, 'flex-child uniq-unit-init');
 
                         const initCode = addClassyCode(
                             uniqUnitInitsDiv,
-                            unsupported_equipment_init ? 'flex-child warning' : 'flex-child'
+                            unsupported_equipment_init ? 'flex-child init warning' : 'flex-child init'
                         );
 
                         initCode.id = 'n' + i;
