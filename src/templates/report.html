@@ -646,83 +646,81 @@
             }
 
 
-            if (report.vehicles_static_boxes && report.vehicles_static_boxes.length) {
+            if ((report.vehicles && report.vehicles.length) ||
+                report.boxes && report.boxes.length) {
 
                 const vehiclesStaticBoxesDiv = addClassyDiv(main, 'flex-child vehicles__static__boxes');
 
                 addClassyDiv(vehiclesStaticBoxesDiv, 'flex-child heading')
                     .innerHTML = msg.headings.vehicles_static_boxes;
 
-                //report.vehicles_static_boxes.sort(
-                //    ({is_box: is_box_a = false}, {is_box: is_box_b = false}) => {
-                //    
-                //        //console.log(is_box_a, is_box_b)
-
-                //        if (!is_box_a && is_box_b) {
-
-                //            return -1;
-
-                //        }
-
-                //        if (is_box_a && !is_box_b) {
-
-                //            return 1;
-
-                //        }
-
-                //        return 0;
-                //    }
-                //).forEach(
-
                 const vehiclesStaticBoxesListDiv = addClassyDiv(vehiclesStaticBoxesDiv, 'flex-child gigantic-list');
 
-                report.vehicles_static_boxes.forEach(
-                    ({name, type, description, init, is_box, lock, fuel, ammo, health, ace_isMedicalVehicle,
+                report.vehicles.forEach(
+                    ({name, type, description, init, lock, fuel, ammo, health, ace_isMedicalVehicle,
                         ace_isRepairVehicle}) => {
 
                         const listItem = addClassyDiv(vehiclesStaticBoxesListDiv, 'flex-child list-item');
                         
                         const listItemFirstRow = addClassyDiv(listItem, 'flex-child first-row');
 
-                        addClassyDiv(listItemFirstRow, 'flex-child').innerHTML = `${name} (${type}) ${description || ''}`;
+                        addClassyDiv(listItemFirstRow, 'flex-child')
+                            .innerHTML = `${name} (${type}) ${description || ''}`;
 
-                        if (!is_box) {
+                        addClassyDiv(listItemFirstRow, 'flex-child')
+                            .innerHTML = lock || '';
+
+                        if (typeof fuel === 'number') {
 
                             addClassyDiv(listItemFirstRow, 'flex-child')
-                                .innerHTML = lock || '';
-
-                            if (typeof fuel === 'number') {
-
-                                addClassyDiv(listItemFirstRow, 'flex-child')
-                                    .innerHTML = `${msg.vehicles.fuel} ${fuel}%`;
-                            }
-
-                            if (typeof ammo === 'number') {
-
-                                addClassyDiv(listItemFirstRow, 'flex-child')
-                                    .innerHTML = `${msg.vehicles.ammo} ${ammo}%`;
-
-                            }
-
-                            if (typeof health === 'number') {
-
-                                addClassyDiv(listItemFirstRow, 'flex-child')
-                                    .innerHTML = `&#10084; ${health}%`;
-                            }
-
-                            if (ace_isMedicalVehicle == '1.0') {
-
-                                addClassyDiv(listItemFirstRow, 'flex-child')
-                                    .innerHTML = msg.vehicles.ace_isMedicalVehicle;
-                            }
-
-                            if (ace_isRepairVehicle == '1.0') {
-
-                                addClassyDiv(listItemFirstRow, 'flex-child')
-                                    .innerHTML = msg.vehicles.ace_isRepairVehicle;
-
-                            }
+                                .innerHTML = `${msg.vehicles.fuel} ${fuel}%`;
                         }
+
+                        if (typeof ammo === 'number') {
+
+                            addClassyDiv(listItemFirstRow, 'flex-child')
+                                .innerHTML = `${msg.vehicles.ammo} ${ammo}%`;
+
+                        }
+
+                        if (typeof health === 'number') {
+
+                            addClassyDiv(listItemFirstRow, 'flex-child')
+                                .innerHTML = `&#10084; ${health}%`;
+                        }
+
+                        if (ace_isMedicalVehicle == '1.0') {
+
+                            addClassyDiv(listItemFirstRow, 'flex-child')
+                                .innerHTML = msg.vehicles.ace_isMedicalVehicle;
+                        }
+
+                        if (ace_isRepairVehicle == '1.0') {
+
+                            addClassyDiv(listItemFirstRow, 'flex-child')
+                                .innerHTML = msg.vehicles.ace_isRepairVehicle;
+
+                        }
+
+
+                        if (init) {
+
+                            addClassyCode(listItem, 'flex-child second-row')
+                                .innerHTML = init;
+
+                        }
+                    }
+                );
+
+                report.boxes.forEach(
+                    ({name, type, description, init}) => {
+
+                        const listItem = addClassyDiv(vehiclesStaticBoxesListDiv, 'flex-child list-item');
+                        
+                        const listItemFirstRow = addClassyDiv(listItem, 'flex-child first-row');
+
+                        addClassyDiv(listItemFirstRow, 'flex-child')
+                            .innerHTML = `${name} (${type}) ${description || ''}`;
 
 
                         if (init) {
