@@ -454,7 +454,7 @@
             console.log(JSON.parse(report_json));
 
             const report = JSON.parse(
-                report_json.replace(/</g, '&lt\;').replace(/>/g, '&gt\;')
+                report_json.replace(/</g, '&lt\;').replace(/>/g, '&gt\;').replace(/\\"\\"/g, '\\"')
             );
 
             const main = document.getElementsByTagName('main')[0];
