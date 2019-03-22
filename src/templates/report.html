@@ -424,6 +424,10 @@
         .uniq-unit-inits .init {
             display: block;
         }
+
+        .side-container {
+            margin-top: 2em;
+        }
     </style>
 
     <script>
@@ -431,6 +435,16 @@
 
         // "import" msg object
         {% include 'msg' %}
+
+        const localize = (str, to_substitute) =>
+            str.replace(
+                // /${.*?}/g,        // more strict?
+                /{.*?}/g,         // matches with brackets
+                // /(?:{).*?(?:})/g, // unfortunately capture brackets too
+                //(k) => to_substitute[k]
+                (k) => to_substitute[k.split('{')[1].split('}')[0]]
+            );
+
 
         window.addEventListener("load", () => {
 
@@ -775,7 +789,11 @@
                         //addClassyDiv(sideUnitsContainer, 'flex-child')
                         //    .innerHTML = msg.slots.side_playable_slots_count;
 
-                        //addDiv(`\n${side} has ${report.slots.playable_slots[side]} playable slots\n`);
+                        addClassyDiv(sideUnitsContainer, 'flex-child side-name__slots_count')
+                            .innerHTML = localize(
+                                msg.slots.side_playable_slots_count,
+                                {side, playable_slots: report.slots.playable_slots[side]}
+                            );
 
                         report.sides[side].forEach(
                             ({units, groupID}, i) => {
