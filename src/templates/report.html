@@ -457,6 +457,8 @@
                 report_json.replace(/</g, '&lt\;').replace(/>/g, '&gt\;').replace(/\\"\\"/g, '\\"')
             );
 
+            if (report.diff) console.log('nope');
+
             const main = document.getElementsByTagName('main')[0];
 
             const emptyDiv = document.createElement('div');
