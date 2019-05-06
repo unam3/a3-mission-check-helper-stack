@@ -740,13 +740,10 @@
 
                 const isMedic = (attr_value) => {
 
+                    // any other value counts as "Default" in UI; medic unit will be medic
                     if (attr_value === '0.0' || attr_value === '1.0' || attr_value === '2.0') {
 
                         return msg.slots.ace_isMedic[attr_value];
-
-                    } else if (typeof attr_value !== 'undefined') {
-
-                        return msg.slots.ace_isMedic.unusual_value + attr_value;
 
                     }
                 };
