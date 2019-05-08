@@ -113,3 +113,13 @@ def index():
     else:
 
         return render_template('upload.html')
+
+
+#def render_upload_page(error):
+#
+#    return render_template('upload.html'), 200
+#
+#
+#app.register_error_handler(404, render_upload_page)
+#
+#app.register_error_handler(403, render_upload_page)
