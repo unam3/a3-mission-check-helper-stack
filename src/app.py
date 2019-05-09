@@ -39,7 +39,7 @@ def index():
         # extractpbo can't read file from pipe, so we must save file on disk
         current_script_dir = os.path.dirname(os.path.abspath(__file__))
 
-        path_to_uploads = current_script_dir + '/uploads/'
+        path_to_uploads = current_script_dir + '/../uploads/'
 
         file_storage_instance = request.files.get('mission_file')
 
