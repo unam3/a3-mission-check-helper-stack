@@ -2,6 +2,8 @@
 
 destination=~/checker_new_version
 
+rm -rf $destination $destination.7z
+
 # TODO: add check if dir/file already exists
 
 cd ~/a3/ &&
