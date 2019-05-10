@@ -430,11 +430,21 @@
         }
     </style>
 
+</head>
+<body>
+    <header>
+        <!-- <label for="lang">Choose language:</label> -->
+
+        <select id="lang">
+            <option value="ru">Russian</option>
+            <option value="en">English</option>
+        </select>
+    </header>
     <script>
         'use strict';
 
-        // "import" msg object
-        {% include 'msg' %}
+        {% include 'localizations' %}
+
 
         const localize = (str, to_substitute) =>
             str.replace(
@@ -445,21 +455,38 @@
                 (k) => to_substitute[k.split('{')[1].split('}')[0]]
             );
 
+        const report_json = {{ json | safe }};
 
-        window.addEventListener("load", () => {
+        // TODO: remove this line
+        console.log(JSON.parse(report_json));
 
-            const report_json = {{ json | safe }};
+        const report = JSON.parse(
+            report_json.replace(/</g, '&lt\;').replace(/>/g, '&gt\;').replace(/\\"\\"/g, '\\"')
+        );
 
-            // TODO: remove this line
-            console.log(JSON.parse(report_json));
+        if (report.diff) console.log('nope');
 
-            const report = JSON.parse(
-                report_json.replace(/</g, '&lt\;').replace(/>/g, '&gt\;').replace(/\\"\\"/g, '\\"')
-            );
 
-            if (report.diff) console.log('nope');
+        const langSelect = document.getElementById('lang');
 
-            const main = document.getElementsByTagName('main')[0];
+        const renderWithLang = (lang) => {
+
+            langSelect.value = lang;
+
+
+            const oldMain = document.getElementsByTagName('main')[0];
+
+            if (oldMain) {
+
+                oldMain.remove();
+
+            }
+
+
+            const main = document.getElementsByTagName('body')[0].appendChild(document.createElement('main'));
+
+            // read localStorage. use russian if empty/no localStorage (incognito ff?)
+            const msg = localizations[lang];
 
             const emptyDiv = document.createElement('div');
 
@@ -972,10 +999,30 @@
                 );
             }
 
+        };
+
+        window.addEventListener("load", () => {
+
+            const hasLocalStorage = localStorage && localStorage.getItem;
+
+            langSelect.addEventListener("change", () => {
+
+                if (hasLocalStorage) {
+
+                    localStorage.setItem('lang', langSelect.value)
+
+                }
+
+                renderWithLang(langSelect.value);
+
+            });
+
+
+            const initialLocalization = hasLocalStorage && localStorage.getItem('lang') || 'ru';
+
+            renderWithLang(initialLocalization);
+
         });
     </script>
-</head>
-<body>
-    <main></main>
 </body>
 </html>

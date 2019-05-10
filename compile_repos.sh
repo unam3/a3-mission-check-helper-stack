@@ -11,7 +11,7 @@ cd ~/a3/ &&
 git archive --format=tar HEAD | (mkdir -p $destination/src/check && cd $destination/src/check && tar xf -) &&
 cd ~/mission_checker/ &&
 git archive --format=tar HEAD | (cd $destination/ && tar xf -) &&
-mv $destination/src/check/msg $destination/src/templates/ &&
+echo "const localizations = {$(cat $destination/src/check/msg_ru) $(cat $destination/src/check/msg_en) };" > $destination/src/templates/localizations &&
 
 7zr a $destination.7z $destination &&
 
