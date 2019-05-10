@@ -497,11 +497,21 @@
                 addClassyDiv(parentNode, 'error').innerHTML = text;
             };
 
-            if (report.errors && report.errors.wrong_filename) {
+            if (report.errors) {
             
-                addError(main, msg.errors.wrong_filename);
+                if (report.errors.wrong_filename) {
 
-                return;
+                    addError(main, msg.errors.wrong_filename);
+
+                    return;
+
+                } else if (report.errors.extraction_error) {
+                
+                    addError(main, msg.errors.extraction_error);
+
+                    return;
+
+                }
 
             }
 
