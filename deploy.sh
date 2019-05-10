@@ -21,6 +21,11 @@ function deploy {
     pip install Flask
     pip install uwsgi
 
+    export -f deactivate
+
+    # deactivate virtualenv
+    deactivate
+
     echo -n "# Run app on bare flask in dev-mode. Must never be used on production machines.
 cd $1; . venv/bin/activate; FLASK_APP=$1/src/app.py FLASK_ENV=development flask run
 
