@@ -27,7 +27,7 @@ function deploy {
     deactivate
 
     echo -n "# Run app on bare flask in dev-mode. Must never be used on production machines.
-cd $1; . venv/bin/activate; FLASK_APP=$1/src/app.py FLASK_ENV=development flask run && deactivate
+cd $1; . venv/bin/activate; FLASK_APP=$1/src/app.py FLASK_ENV=development flask run --host=0.0.0.0 && deactivate
 
 # Uwsgi-way
 cd $1; . venv/bin/activate; uwsgi --pythonpath $1/src --virtualenv $1/venv --protocol http --socket 127.0.0.1:3331 --wsgi-file $1/src/app.py --callable app --processes 4 --threads 2 --stats 127.0.0.1:9111 --thunder-lock --logto $1/checker.log
