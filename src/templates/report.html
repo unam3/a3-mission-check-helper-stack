@@ -829,13 +829,62 @@
                                 {side, playable_slots: report.slots.playable_slots[side]}
                             );
 
+                        let wordNumber = 1;
+                        let firstNumber = 1;
+                        let secondNumber = 1;
+
                         report.sides[side].forEach(
-                            ({units, groupID}, i) => {
+                            ({units, groupID}) => {
 
                                 const squad = addClassyDiv(sideUnitsContainer, 'flex-child squad');
 
-                                const squadName = addClassyDiv(squad, 'flex-child list-item squad-name')
-                                    .innerHTML = `\n${groupID || (msg.slots.squad_default_name + (i + 1))}\n`;
+                                let squadName;
+
+                                if (groupID) {
+
+                                    squadName = groupID;
+
+                                } else {
+
+                                    squadName = msg.slots.squad_default_names[wordNumber] + ' '
+                                        + firstNumber + '-' + secondNumber;
+
+                                }
+
+                                const squadNameDiv = addClassyDiv(squad, 'flex-child list-item squad-name')
+                                    .innerHTML = `\n${squadName}\n`;
+
+
+                                if (secondNumber == 6) {
+
+                                    secondNumber = 1
+
+                                } else {
+
+                                    secondNumber += 1;
+
+                                }
+
+                                if (firstNumber == 4) {
+
+                                    firstNumber = 1
+
+                                } else {
+
+                                    firstNumber += 1;
+
+                                }
+
+                                if (wordNumber == 26) {
+
+                                    wordNumber = 1
+
+                                } else {
+
+                                    wordNumber += 1;
+
+                                }
+
 
                                 const squadUnits = addClassyDiv(squad, 'flex-child squad-units');
 
