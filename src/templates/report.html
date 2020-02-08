@@ -428,6 +428,10 @@
         .side-container {
             margin-top: 2em;
         }
+
+        .active-init {
+            color: red;
+        }
     </style>
 
 </head>
@@ -498,6 +502,23 @@
             ).innerHTML = text;
 
             const appendEmptyTo = (parentNode) => parentNode.appendChild(emptyDiv.cloneNode());
+
+
+            let activeInitId;
+
+            const toggleActiveInit = (newActiveInitId) => {
+
+                if (activeInitId) {
+
+                    document.getElementById(activeInitId).classList.remove('active-init');
+
+                }
+
+                activeInitId = newActiveInitId;
+
+                document.getElementById(activeInitId).classList.add('active-init');
+            };
+
 
             const addClassyEl = (el, parentNode, classesString) => {
                 
@@ -911,10 +932,14 @@
 
                                         if (init) {
 
-                                            addClassyDiv(
+                                            const initDiv = addClassyDiv(
                                                 typeAndDescriptionDiv,
                                                 'flex-child link-to-init'
-                                            ).innerHTML = `<a href="#n${uniq_init_map[init]}">go to eq init</a>`;
+                                            );
+
+                                            initDiv.innerHTML = `<a href="#n${uniq_init_map[init]}">go to eq init</a>`;
+
+                                            initDiv.addEventListener('click', () => toggleActiveInit(`n${uniq_init_map[init]}`));
 
                                         }
 
