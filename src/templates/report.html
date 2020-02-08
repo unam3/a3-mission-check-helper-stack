@@ -857,7 +857,9 @@
 
                                 if (secondNumber == 6) {
 
-                                    secondNumber = 1
+                                    secondNumber = 1;
+
+                                    firstNumber += 1;
 
                                 } else {
 
@@ -865,26 +867,19 @@
 
                                 }
 
-                                if (firstNumber == 4) {
+                                if (firstNumber == 5) {
 
-                                    firstNumber = 1
-
-                                } else {
-
-                                    firstNumber += 1;
-
-                                }
-
-                                if (wordNumber == 26) {
-
-                                    wordNumber = 1
-
-                                } else {
+                                    firstNumber = 1;
 
                                     wordNumber += 1;
 
                                 }
 
+                                if (wordNumber == 27) {
+
+                                    wordNumber = 1;
+
+                                }
 
                                 const squadUnits = addClassyDiv(squad, 'flex-child squad-units');
 
