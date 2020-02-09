@@ -80,12 +80,15 @@ def index():
                 json=make_json({"errors": {"extraction_error": error.value}})
             )
 
+        path_to_extracted_mission = path_to_save_uploaded_file[:-4]
+
+        mission_sqm_path = ''.join([path_to_extracted_mission, '/mission.sqm'])
 
         # TODO: check this case
-        mission_was_not_binarized = not was_mission_binarized(path_to_save_uploaded_file)
+        # TODO: add exception if no mission.sqm was found
+        mission_was_not_binarized = not was_mission_binarized(mission_sqm_path)
 
 
-        path_to_extracted_mission = path_to_save_uploaded_file[:-4]
 
         check_results = check_mission(path_to_extracted_mission)
 
