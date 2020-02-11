@@ -15,7 +15,6 @@ from check.check_filename import is_filename_ok
 from check.extractpbo import extract_pbo, ExtractpboError
 from check.check_binarization import was_mission_binarized
 from check.mission_check import check as check_mission
-from check.mission_check_wo_layers import check as ref_check_mission
 from check.garbage_collection import remove_check_products
 
 app = Flask(__name__)
@@ -92,8 +91,6 @@ def index():
 
         check_results = check_mission(path_to_extracted_mission)
 
-        ref_check_results = ref_check_mission(path_to_extracted_mission)
-
         remove_check_products(path_to_save_uploaded_file)
         remove_check_products(path_to_extracted_mission)
 
@@ -101,10 +98,6 @@ def index():
         if (mission_was_not_binarized):
             
             check_results['errors']['mission_was_not_binarized'] = True
-
-        if (check_results != ref_check_results):
-
-            check_results['diff'] = True
 
         check_results_json = make_json(check_results)
 
