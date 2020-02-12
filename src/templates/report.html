@@ -671,26 +671,21 @@
 
                     console.log(error, msg.errors[error])
 
-                    if (msg.errors[error]) {
-
-                        if (error === 'vanilla_equipment') {
-
-                            addError(errorsDiv, msg.errors[error] + report.errors[error].join(', '));
-
+                    if (msg.errors[error] &&
                         // filtering errors that we show in different places
-                        } else if (error !== 'has_unit_with_backpack_dup' && error !== 'unsupported_equipment_init') {
+                        error !== 'has_unit_with_backpack_dup' && error !== 'unsupported_equipment_init'
+
+                    ) {
 
                             if (report.errors[error] !== true) {
 
                                 addError(errorsDiv, msg.errors[error] + ' ' + report.errors[error]);
 
                             } else {
-                            
+
                                 addError(errorsDiv, msg.errors[error]);
 
                             }
-
-                        }
 
                     } else {
                         
