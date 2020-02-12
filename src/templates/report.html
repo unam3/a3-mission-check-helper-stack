@@ -703,7 +703,7 @@
             const playable_slots_count = Object.keys(report.slots.playable_slots)
                 .reduce((acc, side) => acc + report.slots.playable_slots[side], 0);
 
-            if (playable_slots_count > 190) {
+            if (playable_slots_count > 210) {
                 
                 addError(errorsDiv, msg.errors.too_many_slots);
 
