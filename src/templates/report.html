@@ -1013,12 +1013,6 @@
 
                 }
 
-                if (report.warnings.has_unit_without_personal_radio) {
-
-                    addWarning(uniqUnitInitsDiv, msg.warnings.has_unit_without_personal_radio);
-                
-                }
-
                 if (report.errors.unsupported_equipment_init) {
 
                     addError(
@@ -1033,8 +1027,8 @@
 
                 report.slots.unique_inits.forEach(
                     (
-                        {splitted_init, init, unsupported_equipment_init, has_no_radio, backpack_will_dup,
-                            vanilla_equipment},
+                        {splitted_init, init, unsupported_equipment_init, has_no_radio, group_leader_without_lrr,
+                            backpack_will_dup, vanilla_equipment},
                         i
                     ) => {
                         
@@ -1047,6 +1041,13 @@
 
                         initCode.innerHTML = unsupported_equipment_init ?
                             init + msg.warnings.unsupported_equipment_init : init;
+
+                        if (group_leader_without_lrr) {
+
+                            addClassyDiv(uniqUnitInitsDiv, 'flex-child warning')
+                                .innerHTML = msg.warnings.group_leader_without_lrr;
+
+                        }
 
                         if (has_no_radio) {
 
