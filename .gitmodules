@@ -1,0 +1,3 @@
+[submodule "src/check"]
+	path = src/check
+	url = https://github.com/unam3/a3-mission-check-helper-core.git
