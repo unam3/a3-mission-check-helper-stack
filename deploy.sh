@@ -30,10 +30,10 @@ function deploy {
 cd $1; . venv/bin/activate; FLASK_APP=$1/src/app.py FLASK_ENV=development flask run --host=0.0.0.0 && deactivate
 
 # Uwsgi-way
-cd $1; . venv/bin/activate; uwsgi --pythonpath $1/src --virtualenv $1/venv --protocol http --socket 127.0.0.1:3331 --wsgi-file $1/src/app.py --callable app --processes 4 --threads 2 --stats 127.0.0.1:9111 --thunder-lock --logto $1/checker.log
+cd $1; . venv/bin/activate; uwsgi --pythonpath $1/src --virtualenv $1/venv --protocol http --socket 0.0.0.0:3331 --wsgi-file $1/src/app.py --callable app --processes 4 --threads 2 --stats 0.0.0.0:9111 --thunder-lock --logto $1/checker.log && deactivate
 
 # logs into console
-cd $1; . venv/bin/activate; uwsgi --pythonpath $1/src --virtualenv $1/venv --protocol http --socket 127.0.0.1:3331 --wsgi-file $1/src/app.py --callable app --processes 4 --threads 2 --stats 127.0.0.1:9111 --thunder-lock
+cd $1; . venv/bin/activate; uwsgi --pythonpath $1/src --virtualenv $1/venv --protocol http --socket 0.0.0.0:3331 --wsgi-file $1/src/app.py --callable app --processes 4 --threads 2 --stats 0.0.0.0:9111 --thunder-lock && deactivate
 
 ### Update process steps ###
 # Pack uploads if any files and logs; put away
@@ -42,7 +42,7 @@ if ! [[ -z \"\$(ls -A $1/uploads)\" ]] || ! [[ -z \"\$(ls -A $1/checker.log)\" ]
 fi
 
 # Remove old files
-#rm -rf $1/src $1/static $1/uploads/* $1/checker.log
+#rm -rf $1/src $1/uploads/* $1/checker.log
 rm -rf $1/*
 
 # Unpack new version archive
