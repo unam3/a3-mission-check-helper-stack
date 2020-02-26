@@ -45,11 +45,6 @@ fi
 #rm -rf $1/src $1/uploads/* $1/checker.log
 rm -rf $1/*
 
-# Unpack new version archive
-dtrx checker_new_version.7z &&
-mv -f checker_new_version/* $1/ &&
-rm -rf checker_new_version/
-
 " > $1/run_n_update_commands &&
 
     echo "instructions and commands was written to $1/run_n_update_commands"
