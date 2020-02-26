@@ -32,7 +32,7 @@ Dependencies: debian/ubuntu linux, git, tar, bash, python2, extractpbo (depbo-to
 
 1. Download this release, `cd` in it.
 
-2. Replace `deploy_folder` in code below to full path to directory **without trailing slash**. Copypaste code into terminal emulator with bash and run:
+2. Replace `deploy_folder` path in code below to full path to directory **without trailing slash**. Copypaste code into terminal emulator with bash and run:
 
 ```
 deploy_folder=/home/some/mission_check_helper && mkdir -p $deploy_folder &&
@@ -43,4 +43,4 @@ cd $deploy_folder && . deploy.sh $deploy_folder && cat $deploy_folder/run_n_upda
 
 ## Usage
 
-All instractions will be available in `$deploy_folder/run_n_update_commands` after deployment.
+All instructions will be available in `$deploy_folder/run_n_update_commands` after deployment.
