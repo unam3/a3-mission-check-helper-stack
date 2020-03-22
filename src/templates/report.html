@@ -671,11 +671,10 @@
 
                     console.log(error, msg.errors[error])
 
-                    if (msg.errors[error] &&
-                        // filtering errors that we show in different places
-                        error !== 'has_unit_with_backpack_dup' && error !== 'unsupported_equipment_init'
+                    if (msg.errors[error]) {
 
-                    ) {
+                        // filtering errors that we show in different places
+                        if (error !== 'has_unit_with_backpack_dup' && error !== 'unsupported_equipment_init') {
 
                             if (report.errors[error] !== true) {
 
@@ -686,6 +685,7 @@
                                 addError(errorsDiv, msg.errors[error]);
 
                             }
+                        }
 
                     } else {
                         
