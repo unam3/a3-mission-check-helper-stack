@@ -797,21 +797,27 @@
 
                 const isMedic = (attr_value) => {
 
-                    // any other value counts as "Default" in UI; medic unit will be medic
+                    // check out 'expression' property
+                    // https://github.com/acemod/ACE3/blob/master/addons/medical_treatment/Cfg3DEN.hpp#L50
                     if (attr_value === '0.0' || attr_value === '1.0' || attr_value === '2.0') {
 
                         return msg.slots.ace_isMedic[attr_value];
+
+                    } else if (typeof attr_value !== 'undefined' && attr_value !== '-1.0') {
+                        
+                        return msg.slots.ace_isMedic.unusual_value + attr_value;
 
                     }
                 };
 
                 const isEngineer = (attr_value) => {
                 
+                    // https://github.com/acemod/ACE3/blob/master/addons/repair/CfgEden.hpp#L43
                     if (attr_value === '0.0' || attr_value === '1.0' || attr_value === '2.0') {
                 
                         return msg.slots.ace_isEngineer[attr_value];
 
-                    } else if (typeof attr_value !== 'undefined') {
+                    } else if (typeof attr_value !== 'undefined' && attr_value !== '-1.0') {
                         
                         return msg.slots.ace_isEngineer.unusual_value + attr_value;
 
@@ -949,21 +955,31 @@
                                                 'flex-child skills'
                                             );
 
+
                                             if (ace_isEngineer) {
 
-                                                addClassyDiv(
-                                                    skillsDiv,
-                                                    'flex-child isEngineer'
-                                                ).innerHTML = isEngineer(ace_isEngineer);
+                                                const ace_isEngineer_localized = isEngineer(ace_isEngineer);
+
+                                                if (ace_isEngineer_localized) {
+                                                    addClassyDiv(
+                                                        skillsDiv,
+                                                        'flex-child isEngineer'
+                                                    ).innerHTML = ace_isEngineer_localized;
+                                                }
 
                                             }
 
                                             if (ace_isMedic) {
 
-                                                addClassyDiv(
-                                                    skillsDiv,
-                                                    'flex-child isMedic'
-                                                ).innerHTML = isMedic(ace_isMedic);
+                                                const ace_isMedic_localized = isMedic(ace_isMedic);
+
+                                                if (ace_isMedic_localized) {
+
+                                                    addClassyDiv(
+                                                        skillsDiv,
+                                                        'flex-child isMedic'
+                                                    ).innerHTML = ace_isMedic_localized;
+                                                }
 
                                             }
                                         }
